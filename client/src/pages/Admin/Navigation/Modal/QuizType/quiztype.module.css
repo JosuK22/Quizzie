@@ -1,0 +1,145 @@
+.quizContainer {
+    width: 100%;
+    /*  */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    /* background-color: yellow; */
+  }
+  
+  .questionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .questions{
+    display: flex;
+  }
+  .questionNumber {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .questionNumber.selected {
+    background-color: #4CAF50; 
+    color: white;
+    font-weight: bold;
+  }
+  .addQuestionButton {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 7rem;
+  }
+  .addQuestionButton:hover{
+    background-color: #F1F1F1;
+  }
+  .questionInput {
+    padding-left: 1rem;
+    width: 100%;
+    height: 3rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .optionTypeContainer {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .optionTypeContainer label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .optionsContainer {
+    margin-bottom: 20px;
+    height: 250px;
+  }
+  
+  .optionRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    gap: 10px;
+  }
+  .optionRadio {
+    margin-right: 10px; 
+  }
+
+  .optionInput {
+    width: 50%;
+    padding: 10px;
+    height: 3rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  .optionInput:focus, .questionInput:focus {
+    outline: none; 
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
+  }
+  .removeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .addOptionButton {
+    background-color: transparent;
+    color: #A0A0A0;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  .addOptionButton:hover{
+    background-color: #f8f6f6;
+  }
+  .actionButtons {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .cancelButton {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 1rem ;
+  }
+  .cancelButton:hover{
+    background-color: #ff0000;
+    color: white;
+  }
+  .createButton {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .cancelButton:hover, .createButton:hover {
+    opacity: 0.9;
+  }
+  

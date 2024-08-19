@@ -1,0 +1,42 @@
+.quizcard {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: auto auto; 
+    gap: .4rem; 
+    padding: .5rem;
+    border-radius: .4rem;
+    background-color: white;
+  }
+  
+  .title {
+    grid-column: 1 / 2; 
+    grid-row: 1; 
+    width: 100%;
+    padding-left: 1rem;
+    
+    
+  }
+  
+  .views {
+    grid-column: 2 / 3; 
+    grid-row: 1; 
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: .8rem;
+    color: #FF5D01;
+    
+  }
+  
+  .date {
+    grid-column: 1 / 3; 
+    grid-row: 2; 
+    width: 100%;
+    color: #60B84B;
+    margin-top: .4rem;
+    padding-left: 1rem;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+  

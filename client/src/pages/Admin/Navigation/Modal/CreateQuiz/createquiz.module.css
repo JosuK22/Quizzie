@@ -1,0 +1,98 @@
+  
+  .modalContainer {
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    gap: 2rem;
+    box-sizing: border-box;
+  }
+  .inputField {
+    padding-left: 1rem;
+    flex-grow: 1;
+    height: 3rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  .invalidInput {
+    box-shadow: 0px 1px 6px rgba(255, 9, 9, .9); /* Red border for invalid input */
+  }
+  .invalidInput::placeholder {
+    color: red; /* Red placeholder color for invalid input */
+  }
+  
+  .inputField:focus {
+    border: none; 
+    outline: none; 
+    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.2);
+  }
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cancelButton {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    padding: 8px 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .continueButton {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cancelButton:hover, .continueButton:hover {
+    opacity: 0.9;
+  }
+  
+  .quizTypeContainer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .quizTypeLabel {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .quizTypeOptions {
+    display: flex;
+    gap: 5rem;
+  }
+  
+  .optionButton {
+    background-color: #f1f1f1;
+    border: 2px solid transparent;
+    padding: 8px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #000000;
+    cursor: pointer;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    
+  }
+  
+  .optionButton:hover {
+    border: 2px solid #0cd649;
+  }
+  
+  .selected {
+    background-color: #0cd649;
+    color: #333;
+    border: 2px solid transparent;
+  }
+  

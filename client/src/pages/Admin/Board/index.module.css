@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #EDEDED;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.stats{
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  height: 200px;
+  gap : 4rem;
+  justify-content: center;
+}
+
+.quizContainer{
+  /* background-color: gray; */
+  width: 100%;
+  max-width: 1200px;
+  height: 500px;
+  padding: 1rem;
+}
+
+.quizList{
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; 
+  grid-template-rows: auto auto; 
+  gap: 2rem;
+}

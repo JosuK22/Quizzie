@@ -1,0 +1,12 @@
+.logoutContent{
+    padding: .2rem 2rem;
+  }
+  .logoutActions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+    
+  }
+  

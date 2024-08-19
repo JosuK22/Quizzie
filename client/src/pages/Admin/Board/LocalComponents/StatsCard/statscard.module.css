@@ -1,0 +1,13 @@
+.statscard{
+    min-width: 295px;
+    min-height: 145px;
+    padding: 2rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: .4rem;
+    opacity: 0px;
+
+}
+
+.span{
+    margin-bottom: 1rem;
+}

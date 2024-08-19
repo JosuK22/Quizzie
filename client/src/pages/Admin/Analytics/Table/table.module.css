@@ -1,0 +1,85 @@
+
+   .quizTableContainer {
+    margin-top: 3rem;
+    width: 1200px;
+  }
+  
+  .quizTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem; 
+  }
+  
+  .quizTable th,
+  .quizTable td {
+    padding: 15px;
+    text-align: left;
+  }
+  
+  .quizTable th {
+    background-color: #5076FF;
+    color: white;
+  }
+  
+  .tableRow {
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);   
+  }
+  
+  .cell {
+    padding: 15px;
+  }
+  .quizTable tbody tr:nth-child(odd){
+    box-shadow: none;
+  }
+
+  .quizTable tbody tr:nth-child(even) .cell {
+    background-color: #B3C4FF;
+  }
+  
+  /* Styling for the first and last cells in each row */
+  .quizTable tbody tr .cell:first-child {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  
+  .quizTable tbody tr .cell:last-child {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  
+  /* Apply the same properties for the <thead> */
+  .quizTable thead th:first-child {
+    border-bottom-left-radius: 1rem;
+    border-top-left-radius: 1rem;
+  }
+  
+  .quizTable thead th:last-child {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  
+  .quizTable button {
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .editBtn {
+    color: #6b21a8;
+  }
+  
+  .deleteBtn {
+    color: #e11d48;
+  }
+  
+  .shareBtn {
+    color: #22c55e;
+  }
+  
+  .analysisLink {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
