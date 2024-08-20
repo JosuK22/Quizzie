@@ -1,8 +1,8 @@
-import { useContext, useMemo } from 'react';
+// import { useContext, useMemo } from 'react';
 import { Text } from '../../../components/ui';
-import useFetch from '../../../hooks/useFetch';
-import { AuthContext } from '../../../store/AuthProvider';
-import { BACKEND_URL } from '../../../utils/connection';
+// import useFetch from '../../../hooks/useFetch';
+// import { AuthContext } from '../../../store/AuthProvider';
+// import { BACKEND_URL } from '../../../utils/connection';
 import Table from './Table/table';
 
 import styles from './index.module.css';

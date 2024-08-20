@@ -45,7 +45,11 @@ export default function FormInput({
           {isVisible ? secondaryIcon : tertiaryIcon}
         </div>
       </div>
-      <Text color="red">{error?.message}</Text>
+
+      <div className={styles.error}>
+        <Text color="red">{error?.message}</Text>
+      </div>
+      
     </div>
   );
 }

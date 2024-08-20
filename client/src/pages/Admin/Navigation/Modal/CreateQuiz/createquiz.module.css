@@ -87,12 +87,12 @@
   }
   
   .optionButton:hover {
-    border: 2px solid #0cd649;
+    border: 2px solid #4CAF50;
   }
   
   .selected {
-    background-color: #0cd649;
-    color: #333;
+    background-color: #4CAF50;
+    color: #ffffff;
     border: 2px solid transparent;
   }
   

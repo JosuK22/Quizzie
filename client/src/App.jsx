@@ -8,7 +8,7 @@ import AuthProvider from './store/AuthProvider';
 import Board from './pages/Admin/Board';
 import Analytics from './pages/Admin/Analytics';
 import Settings from './pages/Admin/Settings';
-import TaskProvider from './store/TaskProvider';
+//import TaskProvider from './store/TaskProvider';
 
 const router = createBrowserRouter([
   {
@@ -22,9 +22,9 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <TaskProvider>
+          //<TaskProvider>
             <Board />
-          </TaskProvider>
+          //</TaskProvider>
         ),
       },
       {

@@ -1,3 +1,4 @@
+// createquiz.jsx
 import { useState } from 'react';
 import styles from './createquiz.module.css';
 
@@ -13,7 +14,7 @@ const CreateQuiz = ({ toggleModal, onContinue }) => {
     }
 
     setIsQuizNameInvalid(false);
-    onContinue();
+    onContinue(selectedType); 
   };
 
   return (
@@ -50,3 +51,4 @@ const CreateQuiz = ({ toggleModal, onContinue }) => {
 };
 
 export default CreateQuiz;
+

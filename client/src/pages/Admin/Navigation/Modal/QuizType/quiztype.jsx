@@ -1,50 +1,66 @@
 import { useState } from 'react';
-import {Trash2} from 'lucide-react'
 import { Text } from '../../../../../components/ui';
+import Timer from './components/Timer/timer';
+import toast, { Toaster } from 'react-hot-toast';
+import OptionsContainer from './components/Options/options';
 import styles from './quiztype.module.css';
 
-const QuizCreator = ({ toggleModal }) => {
+const QuizCreator = ({ toggleModal, quizType }) => { 
   const [questionsData, setQuestionsData] = useState([
     { question: '', options: ['', ''], optionType: 'text', selectedOption: null }
   ]);
-
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+  const [errorState, setErrorState] = useState({
+    questionError: false,
+    optionsError: false,
+    optionSelectedError: false
+  });
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questionsData];
     updatedQuestions[index].question = value;
     setQuestionsData(updatedQuestions);
+    if (value.trim()) {
+      setErrorState(prevState => ({ ...prevState, questionError: false }));
+    }
   };
 
-  const handleOptionChange = (questionIndex, optionIndex, value) => {
+  const handleOptionChange = (optionIndex, value) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[questionIndex].options[optionIndex] = value;
+    updatedQuestions[selectedQuestionIndex].options[optionIndex] = value;
     setQuestionsData(updatedQuestions);
+    if (value.trim()) {
+      setErrorState(prevState => ({
+        ...prevState,
+        optionsError: false,
+        optionSelectedError: false
+      }));
+    }
   };
 
-  const handleAddOption = (questionIndex) => {
+  const handleAddOption = () => {
     const updatedQuestions = [...questionsData];
-    if (updatedQuestions[questionIndex].options.length < 5) {
-      updatedQuestions[questionIndex].options.push('');
+    if (updatedQuestions[selectedQuestionIndex].options.length < 5) {
+      updatedQuestions[selectedQuestionIndex].options.push('');
       setQuestionsData(updatedQuestions);
     }
   };
 
-  const handleRemoveOption = (questionIndex, optionIndex) => {
+  const handleRemoveOption = (optionIndex) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[questionIndex].options = updatedQuestions[questionIndex].options.filter((_, i) => i !== optionIndex);
+    updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.filter((_, i) => i !== optionIndex);
     setQuestionsData(updatedQuestions);
   };
 
-  const handleOptionTypeChange = (index, type) => {
+  const handleOptionTypeChange = (type) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[index].optionType = type;
+    updatedQuestions[selectedQuestionIndex].optionType = type;
     setQuestionsData(updatedQuestions);
   };
 
-  const handleRadioChange = (questionIndex, optionIndex) => {
+  const handleRadioChange = (optionIndex) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[questionIndex].selectedOption = optionIndex;
+    updatedQuestions[selectedQuestionIndex].selectedOption = optionIndex;
     setQuestionsData(updatedQuestions);
   };
 
@@ -63,7 +79,7 @@ const QuizCreator = ({ toggleModal }) => {
       { question: '', options: ['', ''], optionType: 'text', selectedOption: null }
     ]);
     setSelectedQuestionIndex(0);
-    toggleModal(); // Close the modal
+    toggleModal(); 
   };
 
   const handleDeleteQuestion = () => {
@@ -76,12 +92,62 @@ const QuizCreator = ({ toggleModal }) => {
     }
   };
 
+  const validateQuiz = () => {
+    let hasError = false;
+
+    if (questionsData.some(q => !q.question.trim())) {
+      toast.error('Please fill out all questions.');
+      setErrorState({
+        questionError: true,
+        optionsError: false,
+        optionSelectedError: false
+      });
+      hasError = true;
+      return false;
+    }
+
+    for (const q of questionsData) {
+      const allOptionsFilled = q.options.every(option => option.trim());
+      if (!allOptionsFilled) {
+        toast.error('Please fill out all options.');
+        setErrorState({
+          questionError: false,
+          optionsError: true,
+          optionSelectedError: false
+        });
+        hasError = true;
+        return false;
+      }
+
+      if (q.optionType === 'text' && q.selectedOption === null) {
+        toast.error('Select an answer for the question.');
+        setErrorState({
+          questionError: false,
+          optionsError: false,
+          optionSelectedError: true
+        });
+        hasError = true;
+        return false;
+      }
+    }
+
+    setErrorState({
+      questionError: false,
+      optionsError: false,
+      optionSelectedError: false
+    });
+    return true;
+  };
+
   const handleCreateQuiz = () => {
-    console.log('Quiz Created:', questionsData);
+    if (validateQuiz()) {
+      console.log('Quiz Created:', questionsData);
+    }
   };
 
   return (
     <div className={styles.quizContainer}>
+      <Toaster /> 
       <div className={styles.questionHeader}>
         <div className={styles.questions}>
           {questionsData.map((_, index) => (
@@ -101,7 +167,7 @@ const QuizCreator = ({ toggleModal }) => {
       </div>
 
       <input
-        className={styles.questionInput}
+        className={`${styles.questionInput} ${errorState.questionError ? styles.error : ''}`}
         type="text"
         value={questionsData[selectedQuestionIndex]?.question || ''}
         placeholder="Poll Question"
@@ -117,41 +183,27 @@ const QuizCreator = ({ toggleModal }) => {
               name={`optionType-${selectedQuestionIndex}`}
               value={type}
               checked={questionsData[selectedQuestionIndex]?.optionType === type}
-              onChange={() => handleOptionTypeChange(selectedQuestionIndex, type)}
+              onChange={() => handleOptionTypeChange(type)}
             /> {type.charAt(0).toUpperCase() + type.slice(1).replace(/([A-Z])/g, ' $1')}
           </label>
         ))}
       </div>
 
-      <div className={styles.optionsContainer}>
-        {questionsData[selectedQuestionIndex]?.options.map((option, optionIndex) => (
-          <div className={styles.optionRow} key={optionIndex}>
-            <input
-              type="radio"
-              name={`optionRadio-${selectedQuestionIndex}`}
-              checked={questionsData[selectedQuestionIndex]?.selectedOption === optionIndex}
-              onChange={() => handleRadioChange(selectedQuestionIndex, optionIndex)}
-              className={styles.optionRadio}
-            />
-            <input
-              className={styles.optionInput}
-              type="text"
-              value={option}
-              placeholder="Text"
-              style={{ backgroundColor: questionsData[selectedQuestionIndex]?.selectedOption === optionIndex ? 'lightgreen' : 'transparent' }}
-              onChange={(e) => handleOptionChange(selectedQuestionIndex, optionIndex, e.target.value)}
-            />
-            {questionsData[selectedQuestionIndex]?.options.length > 2 && (
-              <button className={styles.removeButton} onClick={() => handleRemoveOption(selectedQuestionIndex, optionIndex)}>
-                <Trash2 color='red' size={18}/>
-              </button>
-            )}
+      <div className={styles.midsection}>
+        <OptionsContainer
+          options={questionsData[selectedQuestionIndex]?.options || []}
+          selectedOptionIndex={questionsData[selectedQuestionIndex]?.selectedOption}
+          onOptionChange={handleOptionChange}
+          onRadioChange={handleRadioChange}
+          onRemoveOption={handleRemoveOption}
+          onAddOption={handleAddOption}
+          errorState={errorState}
+          quizType={quizType} 
+        />
+        {quizType === 'Q&A' && (
+          <div className={styles.timer}>
+            <Timer />
           </div>
-        ))}
-        {questionsData[selectedQuestionIndex]?.options.length < 4 && (
-          <button className={styles.addOptionButton} onClick={() => handleAddOption(selectedQuestionIndex)}>
-            Add option
-          </button>
         )}
       </div>
 

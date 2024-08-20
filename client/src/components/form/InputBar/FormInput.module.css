@@ -6,9 +6,10 @@
 .input {
   display: flex;
   align-items: center;
-  border: 2px solid #d0d0d0;
+  border: none;
+  box-shadow: 0px 1px 16px rgba(0, 0, 0, 0.2);
   padding: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem 1rem .2rem .2rem;
 }
 
 .input input {
@@ -29,4 +30,8 @@
 
 .container p {
   margin-top: 0.25rem;
+}
+.error{
+  
+  height: 1rem;
 }

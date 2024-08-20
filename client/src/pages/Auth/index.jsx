@@ -76,21 +76,7 @@ export default function AuthLayout() {
       />
 
       <main className={styles.container}>
-        <div className={styles.poster}>
-          <div className={styles.image}>
-            <div className={styles.circle}></div>
-            <img src={astroBoy} alt="Astro boy" />
-          </div>
-
-          <Text color="white" step={8}>
-            Welcome aboard my friend
-          </Text>
-
-          <Text color="white" step={4} style={{ marginTop: '0.5rem' }}>
-            Just a couple of clicks and we start
-          </Text>
-        </div>
-
+      
         <div className={styles.outlet}>
           <Outlet />
         </div>

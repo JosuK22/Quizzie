@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 export default function Statscard({ type }) {
   const cardText = [
-    { title: 'Quiz Created', value: 100, color: '#FF5D01' },
-    { title: 'Questions Created', value: 50, color: '#60B84B' },
-    { title: 'Total Impressions', value: 50, color: '#5076FF' },
+    { title: 'Quiz Created', value: 0, color: '#FF5D01' },
+    { title: 'Questions Created', value: 0, color: '#60B84B' },
+    { title: 'Total Impressions', value: 0, color: '#5076FF' },
   ];
 
   const cardData = cardText.find((item) => 

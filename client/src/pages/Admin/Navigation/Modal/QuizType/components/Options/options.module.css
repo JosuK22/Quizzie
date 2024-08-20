@@ -1,0 +1,54 @@
+.optionsContainer {
+    margin-bottom: 20px;
+    width: 60%;
+    height: 250px;
+  }
+  
+  .optionRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    gap: 10px;
+  }
+  
+  .optionRadio {
+    margin-right: 10px; 
+  }
+  
+  .optionInput {
+    width: 100%;
+    padding: 10px;
+    height: 3rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .optionInput:focus {
+    outline: none; 
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .removeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .addOptionButton {
+    background-color: transparent;
+    color: #A0A0A0;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  .addOptionButton:hover {
+    background-color: #f8f6f6;
+  }
+  .error {
+    box-shadow: 0px 0px 10px rgba(253, 0, 0, 0.9);
+  }
