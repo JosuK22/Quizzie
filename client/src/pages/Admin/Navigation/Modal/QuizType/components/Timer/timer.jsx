@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text } from '../../../../../../../components/ui';
 import styles from './timer.module.css';
 
-const Timer = () => {
+const Timer = ({ onTimeChange }) => {
   const [selectedTime, setSelectedTime] = useState(null); // null means the timer is off
+
+  useEffect(() => {
+    if (onTimeChange) {
+      onTimeChange(selectedTime);
+    }
+  }, [selectedTime, onTimeChange]);
 
   return (
     <div className={styles.timerContainer}>
@@ -31,3 +37,4 @@ const Timer = () => {
 };
 
 export default Timer;
+

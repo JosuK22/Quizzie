@@ -1,20 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text } from '../../../../../components/ui';
 import Timer from './components/Timer/timer';
 import toast, { Toaster } from 'react-hot-toast';
 import OptionsContainer from './components/Options/options';
 import styles from './quiztype.module.css';
 
-const QuizCreator = ({ toggleModal, quizType }) => { 
+const QuizCreator = ({ toggleModal, quizType }) => {
+  const [time, setTime] = useState(null);
   const [questionsData, setQuestionsData] = useState([
-    { question: '', options: ['', ''], optionType: 'text', selectedOption: null }
+    {type: quizType, question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
   ]);
+
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [errorState, setErrorState] = useState({
     questionError: false,
     optionsError: false,
     optionSelectedError: false
   });
+
+  useEffect(() => {
+    // Update the timer for the selected question whenever time changes
+    const updatedQuestions = [...questionsData];
+    updatedQuestions[selectedQuestionIndex].timer = time;
+    setQuestionsData(updatedQuestions);
+  }, [time, selectedQuestionIndex]);
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questionsData];
@@ -68,7 +77,7 @@ const QuizCreator = ({ toggleModal, quizType }) => {
     if (questionsData.length < 5) {
       setQuestionsData([
         ...questionsData,
-        { question: '', options: ['', ''], optionType: 'text', selectedOption: null }
+        { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: time }
       ]);
       setSelectedQuestionIndex(questionsData.length);
     }
@@ -76,7 +85,7 @@ const QuizCreator = ({ toggleModal, quizType }) => {
 
   const handleCancel = () => {
     setQuestionsData([
-      { question: '', options: ['', ''], optionType: 'text', selectedOption: null }
+      { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: time }
     ]);
     setSelectedQuestionIndex(0);
     toggleModal(); 
@@ -139,9 +148,13 @@ const QuizCreator = ({ toggleModal, quizType }) => {
     return true;
   };
 
+  const handleTimeChange = (newTime) => {
+    setTime(newTime);
+  };
+
   const handleCreateQuiz = () => {
     if (validateQuiz()) {
-      console.log('Quiz Created:', questionsData);
+      console.log('Quiz Created:', time, questionsData);
     }
   };
 
@@ -202,7 +215,7 @@ const QuizCreator = ({ toggleModal, quizType }) => {
         />
         {quizType === 'Q&A' && (
           <div className={styles.timer}>
-            <Timer />
+            <Timer onTimeChange={handleTimeChange}/>
           </div>
         )}
       </div>

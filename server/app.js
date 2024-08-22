@@ -3,7 +3,7 @@ const cors = require('cors');
 const globalErrorHandler = require('./controllers/errorController');
 const authRouter = require('./routes/authRoute');
 const userRouter = require('./routes/userRoute');
-
+const quizRouter = require('./routes/quizRoutes');
 
 const AppError = require('./utils/AppError');
 const morgan = require('morgan');
@@ -24,6 +24,7 @@ app.get('/api/v1/', (req, res) => {
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/quiz', quizRouter);
 
 
 app.all('*', (req, res, next) => {
