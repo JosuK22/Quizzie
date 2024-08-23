@@ -45,7 +45,6 @@ const QuestionSchema = new Schema({
     min: 0,
     validate: {
       validator: function(v) {
-        
         return this.quiz_type === 'Q&A' ? v !== null && v < this.options.length : true;
       },
       message: props => `Correct option index must be between 0 and ${this.options.length - 1}.`,
@@ -53,14 +52,6 @@ const QuestionSchema = new Schema({
   },
   timer: {
     type: Number,
-    min: 5,
-    max: 10,
-    validate: {
-      validator: function(v) {
-        return this.quiz_type === 'Q&A' ? v === 5 || v === 10 || v === null : v === null;
-      },
-      message: props => `Timer must be either 5 or 10 seconds for Q&A type, and null for Poll Type.`,
-    },
     default: null,
   },
 }, { _id: false });
@@ -86,6 +77,18 @@ const QuizSchema = new Schema({
       message: props => `A quiz must have between 1 to 5 questions. Currently has ${props.value.length} questions.`,
     },
   },
+  impressions: {
+    type: Number,
+    default: 0,
+  },
+  trending: {
+    type: Boolean,
+    default: false,
+  },
+  sharedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
 }, { timestamps: true });
 
 // Middleware to set quiz_type in questions before saving
@@ -93,6 +96,14 @@ QuizSchema.pre('save', function(next) {
   this.questions.forEach(question => {
     question.quiz_type = this.type;
   });
+  
+  // Update trending status based on impressions
+  if (this.impressions > 10) {
+    this.trending = true;
+  } else {
+    this.trending = false;
+  }
+  
   next();
 });
 

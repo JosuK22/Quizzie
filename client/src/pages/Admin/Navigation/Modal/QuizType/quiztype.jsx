@@ -3,12 +3,15 @@ import { Text } from '../../../../../components/ui';
 import Timer from './components/Timer/timer';
 import toast, { Toaster } from 'react-hot-toast';
 import OptionsContainer from './components/Options/options';
+import { BACKEND_URL } from '../../../../../utils/connection';
 import styles from './quiztype.module.css';
 
-const QuizCreator = ({ toggleModal, quizType }) => {
+
+const QuizCreator = ({ toggleModal, quizType, quizName }) => {
   const [time, setTime] = useState(null);
+  const quizDetails = {type: quizType, title: quizName}
   const [questionsData, setQuestionsData] = useState([
-    {type: quizType, question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
+    { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
   ]);
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
@@ -19,7 +22,6 @@ const QuizCreator = ({ toggleModal, quizType }) => {
   });
 
   useEffect(() => {
-    // Update the timer for the selected question whenever time changes
     const updatedQuestions = [...questionsData];
     updatedQuestions[selectedQuestionIndex].timer = time;
     setQuestionsData(updatedQuestions);
@@ -149,14 +151,58 @@ const QuizCreator = ({ toggleModal, quizType }) => {
   };
 
   const handleTimeChange = (newTime) => {
+    
     setTime(newTime);
   };
 
-  const handleCreateQuiz = () => {
+  const handleCreateQuiz = async () => {
     if (validateQuiz()) {
-      console.log('Quiz Created:', time, questionsData);
+      // Prepare quizDetails object with correct timer values
+      const quizDetails = {
+        name: quizName,
+        type: quizType,
+        questions: questionsData.map((q, index) => ({
+          question_number: index + 1,
+          question_text: q.question,
+          option_type: q.optionType,
+          options: q.options.map(option => ({
+            text: option,  // This assumes options are simple text strings. Adjust if options include image URLs.
+            image_url: '', // Add logic to include image URL if applicable.
+          })),
+          correct_option: q.selectedOption,
+          timer: quizType === 'Q&A' ? (q.timer === null ? null : Number(q.timer)) : null
+        }))
+      };
+      
+  
+      // Log quizDetails to check the payload
+      console.log('Sending quiz details:', quizDetails);
+  
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/v1/quiz`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(quizDetails),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          toast.success('Quiz created successfully!');
+          console.log('Quiz Created:', result);
+          toggleModal();
+        } else {
+          toast.error(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        toast.error('An error occurred while creating the quiz.');
+        console.error('Error:', error);
+      }
     }
   };
+  
 
   return (
     <div className={styles.quizContainer}>

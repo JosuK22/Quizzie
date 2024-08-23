@@ -8,6 +8,7 @@ const validateOptions = (options, correct_option) => {
 
 // Create a new quiz
 exports.createQuiz = async (req, res) => {
+  console.log(req.body);
   try {
     const { name, type, questions } = req.body;
     const newQuiz = new Quiz({ name, type, questions });

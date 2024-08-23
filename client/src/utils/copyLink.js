@@ -5,6 +5,6 @@ export default function copyLink(id) {
   url.pathname = '';
 
   const modifiedUrl = url.href;
-  navigator.clipboard.writeText(`${modifiedUrl}tasks/${id}`);
+  navigator.clipboard.writeText(`${modifiedUrl}quiz/${id}`);
   toast.success('URL copied to clipboard');
 }

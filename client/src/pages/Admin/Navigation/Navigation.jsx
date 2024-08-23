@@ -11,6 +11,7 @@ export default function Navigation() {
   const { isOpen, toggleModal } = useModal();
   const [modalContent, setModalContent] = useState(null);
   const [quizType, setQuizType] = useState(''); // State to hold the selected quiz type
+  const [quizName, setQuizName] = useState('');
 
   const handleCreateQuizClick = () => {
     setModalContent(<CreateQuizModal toggleModal={toggleModal} onContinue={handleContinue} />);
@@ -22,9 +23,10 @@ export default function Navigation() {
     toggleModal(); 
   };
 
-  const handleContinue = (selectedType) => {
+  const handleContinue = (selectedType,quizName) => {
+    setQuizName(quizName)
     setQuizType(selectedType);
-    setModalContent(<QuizTypeModal toggleModal={toggleModal} quizType={selectedType} />);
+    setModalContent(<QuizTypeModal toggleModal={toggleModal} quizType={selectedType} quizName={quizName}/>);
   };
 
   return (

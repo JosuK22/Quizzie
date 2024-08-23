@@ -18,7 +18,7 @@
   
   .optionInput {
     width: 100%;
-    padding: 10px;
+    padding: 1rem;
     height: 3rem;
     border-radius: 10px;
     border: none;
@@ -43,11 +43,16 @@
     border: none;
     cursor: pointer;
     margin-top: 1rem;
-    padding: 1rem;
+    margin-left: 2rem;
+    padding: 1rem 2rem;
+    height: 3rem;
+    border-radius: 10px;
+    box-shadow: 0px 1px 6px rgba(76, 175, 80, 0.9);
   }
   
   .addOptionButton:hover {
-    background-color: #f8f6f6;
+    background-color: rgb(76, 175, 80);
+    color: white;
   }
   .error {
     box-shadow: 0px 0px 10px rgba(253, 0, 0, 0.9);

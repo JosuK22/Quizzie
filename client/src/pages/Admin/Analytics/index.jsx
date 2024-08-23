@@ -1,18 +1,23 @@
-// import { useContext, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Text } from '../../../components/ui';
-// import useFetch from '../../../hooks/useFetch';
-// import { AuthContext } from '../../../store/AuthProvider';
-// import { BACKEND_URL } from '../../../utils/connection';
 import Table from './Table/table';
-
+import QuestionAnalysis from './Question/questionAnalysis';
 import styles from './index.module.css';
 
 export default function Analytics() {
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
+
+  const handleViewAnalysis = (quizId) => {
+    setSelectedQuizId(quizId);
+  };
 
   return (
     <div className={styles.container}>
-      <Text step={8} color='#5076FF' weight='700'>Quiz Analysis</Text>
-      <Table></Table>
+      {selectedQuizId ? (
+        <QuestionAnalysis quizId={selectedQuizId} />
+      ) : (
+        <Table onViewAnalysis={handleViewAnalysis} />
+      )}
     </div>
   );
 }

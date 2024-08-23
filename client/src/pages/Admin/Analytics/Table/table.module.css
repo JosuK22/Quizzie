@@ -2,12 +2,15 @@
    .quizTableContainer {
     margin-top: 3rem;
     width: 1200px;
+    text-align: center;
+    
   }
   
   .quizTable {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.5rem; 
+    margin-top: 3rem;
   }
   
   .quizTable th,
@@ -28,6 +31,7 @@
   
   .cell {
     padding: 15px;
+    
   }
   .quizTable tbody tr:nth-child(odd){
     box-shadow: none;

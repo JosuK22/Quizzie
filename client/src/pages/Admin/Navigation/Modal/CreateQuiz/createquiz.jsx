@@ -14,7 +14,7 @@ const CreateQuiz = ({ toggleModal, onContinue }) => {
     }
 
     setIsQuizNameInvalid(false);
-    onContinue(selectedType); 
+    onContinue(selectedType,quizName); 
   };
 
   return (

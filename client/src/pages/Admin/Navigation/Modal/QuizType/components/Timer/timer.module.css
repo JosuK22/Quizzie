@@ -15,8 +15,12 @@
     cursor: pointer;
     font-weight: bold;
     text-align: center;
+    border: 2px solid transparent;
   }
-  
+  .timerButton:hover{
+    border:2px solid #f44336;
+    color: black;
+  }
   .timerOption {
     text-align: center;
     background-color: #f1f1f1;

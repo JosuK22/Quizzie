@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';  
+import { BACKEND_URL } from '../../../../utils/connection';  
 import styles from './table.module.css';
+import { Text } from '../../../../components/ui';
 
-const QuizTable = () => {
-  const quizzes = [
-    { id: 1, name: 'Quiz 1', createdAt: '2023-09-01', impressions: '500' },
-    { id: 2, name: 'Quiz 2', createdAt: '2023-09-04', impressions: '667' },
-    { id: 3, name: 'Quiz 3', createdAt: '2023-09-07', impressions: '820' },
-    { id: 4, name: 'Quiz 4', createdAt: '2023-09-09', impressions: '789' },
-    { id: 5, name: 'Quiz 5', createdAt: '2023-09-12', impressions: '1.1K' },
-  ];
+const QuizTable = ({ onViewAnalysis }) => {
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`);
+        setQuizzes(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuizzes();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this quiz?')) {
+      try {
+        await axios.delete(`${BACKEND_URL}/api/v1/quiz/${id}`);
+        setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz._id !== id));
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className={styles.quizTableContainer}>
+      <Text step={8} color='#5076FF' weight='700'>Quiz Analysis</Text>
       <table className={styles.quizTable}>
         <thead>
           <tr className={styles.tablehead}>
@@ -24,7 +53,7 @@ const QuizTable = () => {
         </thead>
         <tbody>
           {quizzes.map((quiz, index) => (
-            <tr key={quiz.id} className={styles.tableRow}>
+            <tr key={quiz._id} className={styles.tableRow}>
               <td className={styles.cell}>{index + 1}</td>
               <td className={styles.cell}>{quiz.name}</td>
               <td className={styles.cell}>
@@ -33,11 +62,19 @@ const QuizTable = () => {
               <td className={styles.cell}>{quiz.impressions}</td>
               <td className={styles.cell}>
                 <button className={styles.editBtn}>✏️</button>
-                <button className={styles.deleteBtn}>🗑️</button>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleDelete(quiz._id)}
+                >
+                  🗑️
+                </button>
                 <button className={styles.shareBtn}>🔗</button>
-                <a href={`/analysis/${quiz.id}`} className={styles.analysisLink}>
+                <button
+                  className={styles.analysisLink}
+                  onClick={() => onViewAnalysis(quiz._id)}
+                >
                   Question Wise Analysis
-                </a>
+                </button>
               </td>
             </tr>
           ))}

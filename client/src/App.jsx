@@ -20,12 +20,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index: true,
-        element: (
-          //<TaskProvider>
-            <Board />
-          //</TaskProvider>
-        ),
+        index: true, element: ( <Board /> ),
       },
       {
         path: 'analytics', element: <Analytics />,
