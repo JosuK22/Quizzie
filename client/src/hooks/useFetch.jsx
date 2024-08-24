@@ -1,3 +1,4 @@
+// useFetch.jsx
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -13,11 +14,11 @@ export default function useFetch(url, options) {
 
       if (!res.ok) {
         const errObj = await res.json();
-        throw new Error(errObj.message);
+        throw new Error(errObj.message || 'Something went wrong');
       }
 
       const resObj = await res.json();
-      setData(resObj.data);
+      setData(resObj); // Adjust based on actual response structure
     } catch (error) {
       setError(error);
       toast.error(error.message);
@@ -27,10 +28,9 @@ export default function useFetch(url, options) {
   }, [url, options]);
 
   useEffect(() => {
-    (async () => {
-      await fetchData();
-    })();
+    fetchData();
   }, [fetchData]);
 
   return { data, error, isLoading };
 }
+

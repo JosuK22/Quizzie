@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/tasks/:taskId',
+    path: '/quiz/:quizId',
     element: <PublicLayout />,
   },
 ]);

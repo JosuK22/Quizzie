@@ -1,44 +1,41 @@
+// public.jsx
 import { useParams } from 'react-router-dom';
-import logo from '../../assets/logo.png';
 import useFetch from '../../hooks/useFetch';
-import PublicCard from './PublicCard/PublicCard';
-import { Text , AstroLoader} from '../../components/ui';
 import { BACKEND_URL } from '../../utils/connection';
+import QuizCard from './quizCard/quizCard';
 import styles from './index.module.css';
 
-
 export default function PublicLayout() {
-  const { taskId } = useParams();
-  const url = BACKEND_URL + '/api/v1/tasks/' + taskId;
+  const { quizId } = useParams(); // Assume URL has a parameter for quiz ID
+  const url = `${BACKEND_URL}/api/v1/quiz/${quizId}`;
   const { data, isLoading, error } = useFetch(url);
+
+  console.log('Fetching URL:', url);
+  console.log('Data:', data);
+  console.log('Error:', error);
 
   let content;
 
   if (isLoading) {
-    content = <AstroLoader/>;
+    content = <div>Loading...</div>;
   }
 
   if (error) {
-    content = <p>{error.message}</p>;
+    content = <div>Error: {error.message}</div>;
   }
 
   if (data) {
-    content = <PublicCard task={data.task} />;
+    content = (
+      <div className={styles.content}>
+        <QuizCard quiz={data} />
+      </div>
+    );
   }
 
   return (
+
     <div className={styles.container}>
-      <div className={styles.logo}>
-        <div className={styles.image}>
-          <img src={logo} alt="Pro manage" />
-        </div>
-
-        <div className={styles.title}>
-          <Text step={4} weight='600'>Pro Manage</Text>
-        </div>
-      </div>
-
-      <main>{content}</main>
+      {content}
     </div>
   );
 }

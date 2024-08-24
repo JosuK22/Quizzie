@@ -1,8 +1,10 @@
+// table.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';  
 import { BACKEND_URL } from '../../../../utils/connection';  
 import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
+import copyLink from '../../../../utils/copyLink'; // Adjust the path as needed
 
 const QuizTable = ({ onViewAnalysis }) => {
   const [quizzes, setQuizzes] = useState([]);
@@ -68,7 +70,12 @@ const QuizTable = ({ onViewAnalysis }) => {
                 >
                   🗑️
                 </button>
-                <button className={styles.shareBtn}>🔗</button>
+                <button
+                  className={styles.shareBtn}
+                  onClick={() => copyLink(quiz._id)}
+                >
+                  🔗
+                </button>
                 <button
                   className={styles.analysisLink}
                   onClick={() => onViewAnalysis(quiz._id)}
