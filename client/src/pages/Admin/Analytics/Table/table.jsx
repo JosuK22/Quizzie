@@ -1,12 +1,13 @@
-// table.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';  
 import { BACKEND_URL } from '../../../../utils/connection';  
 import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
-import copyLink from '../../../../utils/copyLink'; // Adjust the path as needed
+import copyLink from '../../../../utils/copyLink';
+import { AuthContext } from '../../../../store/AuthProvider'; 
 
 const QuizTable = ({ onViewAnalysis }) => {
+  const { user } = useContext(AuthContext); 
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +15,11 @@ const QuizTable = ({ onViewAnalysis }) => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`);
+        const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
         setQuizzes(response.data);
       } catch (err) {
         setError(err.message);
@@ -23,13 +28,19 @@ const QuizTable = ({ onViewAnalysis }) => {
       }
     };
 
-    fetchQuizzes();
-  }, []);
+    if (user?.token) {
+      fetchQuizzes();
+    }
+  }, [user]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
-        await axios.delete(`${BACKEND_URL}/api/v1/quiz/${id}`);
+        await axios.delete(`${BACKEND_URL}/api/v1/quiz/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
         setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz._id !== id));
       } catch (err) {
         setError(err.message);

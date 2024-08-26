@@ -1,6 +1,5 @@
 const Quiz = require('../model/quizModel');
 
-// Helper function to validate the options of a question
 const validateOptions = (options, correct_option) => {
   return options.length >= 2 && options.length <= 4 &&
          correct_option >= 0 && correct_option < options.length;
@@ -8,11 +7,13 @@ const validateOptions = (options, correct_option) => {
 
 // Create a new quiz
 exports.createQuiz = async (req, res) => {
-  console.log(req.body);
   try {
     const { name, type, questions } = req.body;
-    const newQuiz = new Quiz({ name, type, questions });
+    const userId = req.user._id; // Assuming you have the user's ID available in req.user
+
+    const newQuiz = new Quiz({ name, type, questions, createdBy: userId });
     await newQuiz.save();
+
     res.status(201).json(newQuiz);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -84,10 +85,11 @@ exports.deleteQuiz = async (req, res) => {
   }
 };
 
-// Get all quizzes
+// Get all quizzes created by the authenticated user
 exports.getAllQuizzes = async (req, res) => {
   try {
-    const quizzes = await Quiz.find();
+    const userId = req.user._id; // Assuming you have the user's ID available in req.user
+    const quizzes = await Quiz.find({ createdBy: userId });
     res.status(200).json(quizzes);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -102,6 +104,17 @@ exports.getQuizById = async (req, res) => {
     if (!quiz) return res.status(404).json({ error: 'Quiz not found' });
 
     res.status(200).json(quiz);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Get quizzes by a specific user
+exports.getUserQuizzes = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const quizzes = await Quiz.find({ createdBy: userId });
+    res.status(200).json(quizzes);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

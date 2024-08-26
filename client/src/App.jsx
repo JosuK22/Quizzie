@@ -8,19 +8,21 @@ import AuthProvider from './store/AuthProvider';
 import Board from './pages/Admin/Board';
 import Analytics from './pages/Admin/Analytics';
 import Settings from './pages/Admin/Settings';
-//import TaskProvider from './store/TaskProvider';
+import { QuizProvider } from './store/QuizProvider'; // Import QuizProvider
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <AuthProvider>
-        <AdminLayout />
+        <QuizProvider> 
+          <AdminLayout />
+        </QuizProvider>
       </AuthProvider>
     ),
     children: [
       {
-        index: true, element: ( <Board /> ),
+        index: true, element: <Board />,
       },
       {
         path: 'analytics', element: <Analytics />,
@@ -48,7 +50,9 @@ const router = createBrowserRouter([
   },
   {
     path: '/quiz/:quizId',
-    element: <PublicLayout />,
+    element: (
+        <PublicLayout />
+    ),
   },
 ]);
 

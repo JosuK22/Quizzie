@@ -1,11 +1,14 @@
 import styles from './statscard.module.css';
 import { Text } from '../../../../../components/ui';
+import { useQuiz } from '../../../../../store/QuizProvider';
 import PropTypes from 'prop-types';
 
 export default function Statscard({ type }) {
+  const { quizCount, questionCount } = useQuiz(); // Get stats from context
+
   const cardText = [
-    { title: 'Quiz Created', value: 0, color: '#FF5D01' },
-    { title: 'Questions Created', value: 0, color: '#60B84B' },
+    { title: 'Quiz Created', value: quizCount, color: '#FF5D01' },
+    { title: 'Questions Created', value: questionCount, color: '#60B84B' },
     { title: 'Total Impressions', value: 0, color: '#5076FF' },
   ];
 
@@ -22,18 +25,14 @@ export default function Statscard({ type }) {
       <div className={styles.span}>
         <Text step={8} weight='700' color={cardData.color}>{cardData.value}</Text>
       </div>
-      
-        <Text step={6} weight='600' color={cardData.color}>{cardData.title}</Text>
-      
+      <Text step={6} weight='600' color={cardData.color}>{cardData.title}</Text>
     </div>
   );
 }
 
-
 Statscard.defaultProps = {
   type: 'quiz', 
 };
-
 
 Statscard.propTypes = {
   type: PropTypes.string,

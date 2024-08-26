@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Text } from '../../../../../components/ui';
 import Timer from './components/Timer/timer';
 import toast, { Toaster } from 'react-hot-toast';
 import OptionsContainer from './components/Options/options';
 import { BACKEND_URL } from '../../../../../utils/connection';
+import { AuthContext } from '../../../../../store/AuthProvider';
 import styles from './quiztype.module.css';
 
 
 const QuizCreator = ({ toggleModal, quizType, quizName }) => {
   const [time, setTime] = useState(null);
   const quizDetails = {type: quizType, title: quizName}
+  const { user } = useContext(AuthContext);
   const [questionsData, setQuestionsData] = useState([
     { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
   ]);
@@ -183,6 +185,7 @@ const QuizCreator = ({ toggleModal, quizType, quizName }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`,
           },
           body: JSON.stringify(quizDetails),
         });

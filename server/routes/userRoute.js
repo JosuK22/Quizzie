@@ -1,6 +1,6 @@
 const express = require('express');
 const { updateUser, getUser } = require('../controllers/userController');
-const { protect } = require('../controllers/authController');
+const { protect } = require('../middleware/authMiddleware'); // Updated import
 
 const router = express.Router();
 

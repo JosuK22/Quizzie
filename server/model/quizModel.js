@@ -89,7 +89,13 @@ const QuizSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 }, { timestamps: true });
+
 
 // Middleware to set quiz_type in questions before saving
 QuizSchema.pre('save', function(next) {

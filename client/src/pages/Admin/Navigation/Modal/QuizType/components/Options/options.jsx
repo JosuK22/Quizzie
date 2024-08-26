@@ -18,7 +18,7 @@ const OptionsContainer = ({
           {quizType === 'Q&A' && (
             <input
               type="radio"
-              name={`optionRadio`}
+              name={`optionRadio-${optionIndex}`} // Fixed name attribute
               checked={selectedOptionIndex === optionIndex}
               onChange={() => onRadioChange(optionIndex)}
               className={styles.optionRadio}
@@ -47,5 +47,6 @@ const OptionsContainer = ({
     </div>
   );
 };
+
 
 export default OptionsContainer;
