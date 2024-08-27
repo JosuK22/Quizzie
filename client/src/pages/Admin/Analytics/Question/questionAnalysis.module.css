@@ -1,9 +1,21 @@
 .container{
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
+    /* background-color: yellow; */
+    height: 100%;
 }
 
 .header{
     display: flex;
-    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.statscard{
+    width: 200px;
+    min-height: 145px;
+    padding: 2rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: .4rem;
+    opacity: 0px;
+    
 }

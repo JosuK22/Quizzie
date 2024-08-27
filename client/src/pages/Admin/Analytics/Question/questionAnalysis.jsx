@@ -44,9 +44,18 @@ const QuestionAnalysis = ({ quizId }) => {
   return (
     <div className={styles.container}>
         <div className={styles.header}>
-            <Text step={7} weight='800' color='#5076FF'>{data.name}</Text><Text step={7} weight='800' color='#5076EF'>Question Wise Analysis</Text>
+            <Text step={7} weight='800' color='#5076FF'>{data.name} Question Wise Analysis</Text>
         </div>
         
+        <div className={styles.statscard}>
+          <div className={styles.span}>
+            <Text step={8} weight='700' ></Text>
+          </div>
+          <Text step={6} weight='600' ></Text>
+        </div>
+
+        
+
         <p><strong>Impressions:</strong> {impressions}</p>
         <p><strong>Created Date:</strong> {createdAt ? formatDate(createdAt) : 'Date not available'}</p>
         <p><strong>Question Text:</strong> {questionText}</p>

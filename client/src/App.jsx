@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <AuthProvider>
-        <QuizProvider> 
+        <QuizProvider> {/* Wrap the whole admin layout with QuizProvider */}
           <AdminLayout />
         </QuizProvider>
       </AuthProvider>
@@ -50,9 +50,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/quiz/:quizId',
-    element: (
-        <PublicLayout />
-    ),
+    element: <PublicLayout />,
   },
 ]);
 

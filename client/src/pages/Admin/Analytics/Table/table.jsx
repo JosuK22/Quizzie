@@ -5,51 +5,24 @@ import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
 import copyLink from '../../../../utils/copyLink';
 import { AuthContext } from '../../../../store/AuthProvider'; 
+import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
 
 const QuizTable = ({ onViewAnalysis }) => {
   const { user } = useContext(AuthContext); 
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { quizzes, deleteQuiz, loading, error } = useQuiz(); // Use deleteQuiz from QuizProvider
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`, {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
-        setQuizzes(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user?.token) {
-      fetchQuizzes();
-    }
-  }, [user]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
-        await axios.delete(`${BACKEND_URL}/api/v1/quiz/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        });
-        setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz._id !== id));
+        await deleteQuiz(id); // Use deleteQuiz from QuizProvider
       } catch (err) {
-        setError(err.message);
+        console.error('Error:', err.message);
       }
     }
   };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className={styles.quizTableContainer}>
