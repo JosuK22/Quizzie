@@ -37,8 +37,11 @@ export default function Text({
     case 8:
       stepStyle = styles.stepEight;
       break;
+    case 9:
+      stepStyle = styles.stepEight;
+      break;
     default:
-      stepStyle = styles.stepThree; 
+      stepStyle = styles.stepNine; 
   }
 
   const fontStyles = {

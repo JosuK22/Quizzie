@@ -45,13 +45,14 @@
 }
 
 .stepEight {
-  font-size: 35px;
+  font-size: 4rem;
+  letter-spacing: -0.01em;
+  line-height: 40px;
+}
+.stepNine {
+  font-size: 8rem;
   letter-spacing: -0.01em;
   line-height: 40px;
 }
 
 
-
-/* font-family: Poppins, Inter, Noto-Sans;
-  line-height: 1.5;
-  font-weight: 400; */

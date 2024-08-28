@@ -50,6 +50,14 @@ const QuestionSchema = new Schema({
       message: props => `Correct option index must be between 0 and ${this.options.length - 1}.`,
     },
   },
+  attempts: {
+    type: Number,
+    default: 0,
+  },
+  correct_attempts:{
+    type: Number,
+    default: 0,
+  },
   timer: {
     type: Number,
     default: null,
@@ -102,14 +110,14 @@ QuizSchema.pre('save', function(next) {
   this.questions.forEach(question => {
     question.quiz_type = this.type;
   });
-  
+
   // Update trending status based on impressions
   if (this.impressions > 10) {
     this.trending = true;
   } else {
     this.trending = false;
   }
-  
+
   next();
 });
 

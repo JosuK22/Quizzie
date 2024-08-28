@@ -9,10 +9,12 @@ export const useQuiz = () => useContext(QuizContext);
 
 export const QuizProvider = ({ children }) => {
   const [quizzes, setQuizzes] = useState([]);
+  const [trendingQuizzes, setTrendingQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quizCount, setQuizCount] = useState(0);
   const [questionCount, setQuestionCount] = useState(0);
+  const [totalImpressions, setTotalImpressions] = useState(0);
   const { user, isLoading: authLoading } = useContext(AuthContext);
 
   useEffect(() => {
@@ -26,9 +28,18 @@ export const QuizProvider = ({ children }) => {
         });
         const quizzesData = response.data;
         setQuizzes(quizzesData);
+
+        // Filter for trending quizzes
+        const trending = quizzesData.filter(quiz => quiz.trending);
+        setTrendingQuizzes(trending);
+
+        // Update counts and impressions
         setQuizCount(quizzesData.length);
         const totalQuestions = quizzesData.reduce((acc, quiz) => acc + quiz.questions.length, 0);
         setQuestionCount(totalQuestions);
+
+        const impressions = quizzesData.reduce((acc, quiz) => acc + quiz.impressions, 0);
+        setTotalImpressions(impressions);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -52,6 +63,15 @@ export const QuizProvider = ({ children }) => {
         setQuizCount(updatedQuizzes.length);
         const totalQuestions = updatedQuizzes.reduce((acc, quiz) => acc + quiz.questions.length, 0);
         setQuestionCount(totalQuestions);
+
+        // Recalculate total impressions
+        const totalImpressions = updatedQuizzes.reduce((acc, quiz) => acc + quiz.impressions, 0);
+        setTotalImpressions(totalImpressions);
+
+        // Update trending quizzes
+        const trending = updatedQuizzes.filter(quiz => quiz.trending);
+        setTrendingQuizzes(trending);
+
         return updatedQuizzes;
       });
     } catch (err) {
@@ -65,12 +85,21 @@ export const QuizProvider = ({ children }) => {
       setQuizCount(updatedQuizzes.length);
       const totalQuestions = updatedQuizzes.reduce((acc, quiz) => acc + quiz.questions.length, 0);
       setQuestionCount(totalQuestions);
+
+      // Recalculate total impressions
+      const impressions = updatedQuizzes.reduce((acc, quiz) => acc + quiz.impressions, 0);
+      setTotalImpressions(impressions);
+
+      // Update trending quizzes
+      const trending = updatedQuizzes.filter(quiz => quiz.trending);
+      setTrendingQuizzes(trending);
+
       return updatedQuizzes;
     });
   };
 
   return (
-    <QuizContext.Provider value={{ quizzes, loading, error, quizCount, questionCount, deleteQuiz, addQuiz }}>
+    <QuizContext.Provider value={{ quizzes, trendingQuizzes, loading, error, quizCount, questionCount, totalImpressions, deleteQuiz, addQuiz }}>
       {children}
     </QuizContext.Provider>
   );

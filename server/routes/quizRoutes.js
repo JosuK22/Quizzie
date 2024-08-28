@@ -6,7 +6,8 @@ const router = express.Router();
 
 // Routes that do not require authentication
 router.get('/:id', quizController.getQuizById);
-
+router.post('/:id/increment-impressions', quizController.incrementImpressions);
+router.post('/:id/update-attempts', quizController.updateAttempts);
 
 // Apply authentication middleware to routes that require it
 router.use(authMiddleware.protect);

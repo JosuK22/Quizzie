@@ -7,22 +7,25 @@ import styles from './Form.module.css';
 export default function Form({ title, children }) {
   return (
     <div className={styles.container}>
-      <Text step={7} weight="500">
-        {title}
-      </Text>
 
-      {children}
-
-      <div className={styles.navigation}>
-        <Text color="#828282">
-          {title === 'Register' ? 'Have an account ?' : 'Have no account yet?'}
-        </Text>
+      <div className={styles.header}>
+        <Button variant={'ghost'}>
+          <Text step={2}  weight="500">{title}</Text>
+        </Button>
+      
         <Link to={title == 'Register' ? '..' : 'register'}>
           <Button variant="outline" >
             {title == 'Register' ? 'Login' : 'Register'}
-          </Button>
+          </Button>  
         </Link>
+      
       </div>
+      
+      <div className={styles.content}>
+        {children}
+      </div>
+      
+
     </div>
   );
 }

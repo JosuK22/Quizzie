@@ -16,13 +16,13 @@ export default function FormInput({
   register,
   error,
   label,
-  placeholder,
-  mainIcon,
+  name,
   secondaryIcon,
   tertiaryIcon,
   type = 'text',
 }) {
   const [isVisible, setIsVisible] = useState(() => checkType(type));
+
 
   const togglePassword = () => {
     setIsVisible((prev) => !prev);
@@ -30,25 +30,26 @@ export default function FormInput({
 
   return (
     <div className={styles.container}>
-      <div className={styles.input}>
-        <div className={styles.icon}>{mainIcon}</div>
-        <input
-          {...register(label)}
-          type={isVisible ? 'text' : 'password'}
-          placeholder={placeholder}
-        />
-        <div
-          onClick={togglePassword}
-          style={{ cursor: 'pointer' }}
-          className={styles.icon}
-        >
+      <div className={styles.wrapper}>
+        <div className={styles.name}><Text step={4} weight='600'>{name}</Text></div>
+        <div className={`${styles.input} ${error ? styles.errorBorder : ''}`}>
+          <input
+            {...register(label)}
+            type={isVisible ? 'text' : 'password'}
+            placeholder={error?.message || ''}
+            className={error ? styles.errorPlaceholder : ''}
+          />
+          <div
+            onClick={togglePassword}
+            style={{ cursor: 'pointer' }}
+            className={styles.icon}
+          >
           {isVisible ? secondaryIcon : tertiaryIcon}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.error}>
-        <Text color="red">{error?.message}</Text>
       </div>
+      
       
     </div>
   );
@@ -58,7 +59,7 @@ FormInput.propTypes = {
   label: PropTypes.string.isRequired,
   error: PropTypes.object,
   type: PropTypes.string,
-  placeholder: PropTypes.string,
+  name: PropTypes.string,
   mainIcon: PropTypes.element,
   secondaryIcon: PropTypes.element,
   register: PropTypes.any,

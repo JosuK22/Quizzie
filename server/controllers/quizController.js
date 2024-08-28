@@ -119,3 +119,51 @@ exports.getUserQuizzes = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+// Increment impressions count
+exports.incrementImpressions = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const quiz = await Quiz.findById(id);
+    if (!quiz) return res.status(404).json({ error: 'Quiz not found' });
+
+    quiz.impressions += 1;
+    await quiz.save();
+
+    res.status(200).json(quiz);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Controller method to update attempts and correct_attempts
+exports.updateAttempts = async (req, res) => {
+  const { id } = req.params;
+  const { questionIndex, selectedOptionIndex } = req.body;
+
+  try {
+    const quiz = await Quiz.findById(id);
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    const question = quiz.questions[questionIndex];
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+
+    // Increment attempts
+    question.attempts += 1;
+
+    // Check if the selected option is correct
+    if (selectedOptionIndex === question.correct_option) {
+      question.correct_attempts += 1;
+    }
+
+    await quiz.save();
+    res.status(200).json({ message: 'Attempts updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

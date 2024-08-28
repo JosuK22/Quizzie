@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Text } from '../../../components/ui';
-import VictoryCard from '../victoryCard/victorycard'; // Import your VictoryCard component
+import VictoryCard from '../victoryCard/victorycard';
 import styles from './quizcard.module.css';
+import { BACKEND_URL } from '../../../utils/connection'; // Add this import
 
 export default function Card({ quiz }) {
   if (!quiz || !quiz.questions || quiz.questions.length === 0) {
@@ -13,15 +14,15 @@ export default function Card({ quiz }) {
   const [countdown, setCountdown] = useState(
     quiz.questions.length > 0 ? parseInt(quiz.questions[0].timer, 10) : 0
   );
-  const [selectedOption, setSelectedOption] = useState(null); // Track selected option
-  const [score, setScore] = useState(0); // Track user score
-  const [isSubmitted, setIsSubmitted] = useState(false); // Track if the quiz has been submitted
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [score, setScore] = useState(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // Track loading state
 
   const totalQuestions = quiz.questions.length;
 
   useEffect(() => {
     if (isSubmitted) {
-      // Do not set up timer interval if quiz is submitted
       return;
     }
 
@@ -35,9 +36,9 @@ export default function Card({ quiz }) {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [countdown, isSubmitted]); // Removed unnecessary dependencies
+  }, [countdown, isSubmitted]);
 
-  const handleQuestionTimeout = () => {
+  const handleQuestionTimeout = async () => {
     if (selectedOption !== null) {
       const correctOption = quiz.questions[currentIndex].correct_option;
       if (selectedOption === correctOption) {
@@ -45,23 +46,38 @@ export default function Card({ quiz }) {
       }
     }
 
+    // Update attempts and correct_attempts on the server
+    try {
+      setLoading(true);
+      await fetch(`${BACKEND_URL}/api/v1/quiz/${quiz._id}/update-attempts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questionIndex: currentIndex,
+          selectedOptionIndex: selectedOption,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to update attempts:', err);
+    } finally {
+      setLoading(false);
+    }
+
     if (currentIndex < totalQuestions - 1) {
-      // Move to the next question
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setCountdown(parseInt(quiz.questions[currentIndex + 1].timer, 10));
-      setSelectedOption(null); // Reset selected option for the next question
+      setSelectedOption(null);
     } else {
-      // Quiz is finished
       setIsSubmitted(true);
     }
   };
 
-  // Handle button click to move to the next question or submit the quiz
   const handleButtonClick = () => {
     if (isSubmitted) {
-      return; // Do nothing if already submitted
+      return;
     }
-
     handleQuestionTimeout();
   };
 
@@ -78,7 +94,7 @@ export default function Card({ quiz }) {
 
   const timerDisplay = countdown > 0
     ? `00 : ${String(countdown).padStart(2, '0')} sec`
-    : 'Time up';
+    : ' ';
 
   const handleOptionClick = (index) => {
     setSelectedOption(index);
@@ -127,6 +143,7 @@ export default function Card({ quiz }) {
           <button
             className={styles.continueButton}
             onClick={handleButtonClick}
+            disabled={loading} // Disable button while loading
           >
             {currentIndex >= totalQuestions - 1 ? 'Submit' : 'NEXT'}
           </button>
@@ -138,6 +155,7 @@ export default function Card({ quiz }) {
 
 Card.propTypes = {
   quiz: PropTypes.shape({
+    _id: PropTypes.string.isRequired, // Ensure quiz ID is passed
     questions: PropTypes.arrayOf(
       PropTypes.shape({
         question_text: PropTypes.string.isRequired,
@@ -148,7 +166,7 @@ Card.propTypes = {
             text: PropTypes.string.isRequired,
           })
         ),
-        correct_option: PropTypes.number.isRequired, // Ensure this is in the correct shape
+        correct_option: PropTypes.number.isRequired,
       })
     ).isRequired,
   }).isRequired,

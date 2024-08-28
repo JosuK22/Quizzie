@@ -7,7 +7,7 @@ import { EyeOff, LockKeyhole, Mail, User, Eye } from 'lucide-react';
 
 import { BACKEND_URL } from '../../../utils/connection';
 import FormInput from '../../../components/form/InputBar/FormInput';
-import {Button} from '../../../components/ui';
+import {Button, Text} from '../../../components/ui';
 import Form from '../Form/Form';
 
 import styles from './styles.module.css';
@@ -97,13 +97,13 @@ export default function Register() {
           error={errors.name}
           label="name"
           register={register}
-          placeholder={'Name'}
+          name = {'Name'}
           mainIcon={<User />}
         />
         <FormInput
           error={errors.email}
           label="email"
-          placeholder={'Email'}
+          name = {'Email'}
           register={register}
           mainIcon={<Mail />}
         />
@@ -112,7 +112,7 @@ export default function Register() {
           label={'password'}
           register={register}
           type="password"
-          placeholder={'Password'}
+          name = {'Password'}
           mainIcon={<LockKeyhole />}
           secondaryIcon={<Eye/>}
           tertiaryIcon ={<EyeOff/>}
@@ -122,7 +122,7 @@ export default function Register() {
           label={'confirmPassword'}
           register={register}
           type="password"
-          placeholder={'Confirm Password'}
+          name = {'Confirm Password'}
           mainIcon={<LockKeyhole />}
           secondaryIcon={<Eye/>}
           tertiaryIcon ={<EyeOff/>}

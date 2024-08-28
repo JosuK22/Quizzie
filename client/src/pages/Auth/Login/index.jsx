@@ -11,7 +11,6 @@ import FormInput from '../../../components/form/InputBar/FormInput.jsx';
 import {Button, LineLoader} from '../../../components/ui';
 import Form from '../Form/Form.jsx';
 import { BACKEND_URL } from '../../../utils/connection.js';
-// import LineLoader from '../../../components/ui/Loaders/ButtonLoader/ButtonLoader.jsx'
 
 import styles from './styles.module.css';
 
@@ -72,11 +71,12 @@ export default function Login() {
   return (
     <Form title="Login">
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        
         <FormInput
           error={errors.email}
           label="email"
           register={register}
-          placeholder={'Email'}
+          name={'Email'}
           mainIcon={<Mail />}
         />
         <FormInput
@@ -84,7 +84,7 @@ export default function Login() {
           label="password"
           register={register}
           type="password"
-          placeholder={'Password'}
+          name = {'Password'}
           mainIcon={<Lock />}
           secondaryIcon={<Eye/>}
           tertiaryIcon ={<EyeOff/>}

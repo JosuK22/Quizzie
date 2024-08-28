@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  
 }
 
 .poster {
@@ -10,27 +11,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 3rem;
 }
 
-.image {
-  margin-bottom: 2rem;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  z-index: 1; 
-}
-.circle{
-  position: absolute;
-  width: 300px; 
-  height: 300px;
-  border-radius: 50%;
-  background: #317F8B;
-  z-index: -1;
-}
+
+
 .outlet {
   height: 100vh;
-  flex: 2;
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }

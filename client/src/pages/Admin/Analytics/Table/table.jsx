@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';  
-import { BACKEND_URL } from '../../../../utils/connection';  
 import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
 import copyLink from '../../../../utils/copyLink';
-import { AuthContext } from '../../../../store/AuthProvider'; 
+
 import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
 
 const QuizTable = ({ onViewAnalysis }) => {
-  const { user } = useContext(AuthContext); 
   const { quizzes, deleteQuiz, loading, error } = useQuiz(); // Use deleteQuiz from QuizProvider
 
   if (loading) return <div>Loading...</div>;

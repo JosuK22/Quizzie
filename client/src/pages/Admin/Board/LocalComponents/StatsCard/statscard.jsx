@@ -4,12 +4,12 @@ import { useQuiz } from '../../../../../store/QuizProvider';
 import PropTypes from 'prop-types';
 
 export default function Statscard({ type }) {
-  const { quizCount, questionCount } = useQuiz(); // Get stats from context
+  const { quizCount, questionCount, totalImpressions } = useQuiz(); // Get stats from context
 
   const cardText = [
     { title: 'Quiz Created', value: quizCount, color: '#FF5D01' },
     { title: 'Questions Created', value: questionCount, color: '#60B84B' },
-    { title: 'Total Impressions', value: 0, color: '#5076FF' },
+    { title: 'Total Impressions', value: totalImpressions, color: '#5076FF' },
   ];
 
   const cardData = cardText.find((item) => 

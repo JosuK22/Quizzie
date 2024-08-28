@@ -31,6 +31,6 @@ export default function useFetch(url, options) {
     fetchData();
   }, [fetchData]);
 
-  return { data, error, isLoading };
+  // Return refetch along with other states
+  return { data, error, isLoading, refetch: fetchData };
 }
-

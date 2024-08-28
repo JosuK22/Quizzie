@@ -13,7 +13,7 @@
   white-space: normal;
   text-align: center;
   padding: 14px 12px 16px;
-  box-shadow: var(--box-shadow)
+  box-shadow: var(--box-shadow);
 }
 
 .primary {
@@ -40,41 +40,25 @@
 
 .outline.primary {
   background-color: transparent;
+  border: none;
+  box-shadow: none;
   color: var(--primary);
 }
-
-.outline.success {
-  background-color: transparent;
-  color: var(--success);
+.outline.primary:hover{
+  color: white;
+  background-color: #4CAF50;
 }
-
-.outline.error {
+.ghost.primary{
   background-color: transparent;
-  color: var(--error);
-}
-
-.jumbo{
-  width: 300px;
-}
-.jumbo.error{
-  background-color: transparent;
-  color: var(--error);
-  width: 300px;
-}
-.jumbo.neutral{
-  background-color: transparent;
-  color: #707070;
-  width: 200px;
+  border: none;
+  color: black;
+  box-shadow: var(--box-shadow);
 }
 
-.ghost {
-  background-color: transparent;
-  border-color: transparent;
-  color: inherit;
-  box-shadow: none;
-}
 
-.ghost:hover {
-  background-color: var(--neutral);
-}
+
+
+
+
+
 

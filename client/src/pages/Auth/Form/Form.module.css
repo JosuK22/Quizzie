@@ -1,20 +1,28 @@
 .container {
   width: 100%;
-  max-width: 400px;
-  /* background-color: yellow; */
+  height: 70%;
+  max-width: 800px;
+  
 }
 
 .container > p {
   text-align: center;
   margin-bottom: 2rem;
+  
+}
+.header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8rem;
+  margin-top: 3rem;
+  margin-bottom: 4rem;
+  
 }
 
-.navigation {
-  margin-top: 2rem;
-  text-align: center;
+.content{
+  display: flex;
+  justify-content: center;
+  min-height: 60%;
 }
 
-.navigation button {
-  width: 100%;
-  margin-top: 1rem;
-}

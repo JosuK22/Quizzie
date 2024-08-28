@@ -46,12 +46,8 @@ export default function AuthLayout() {
 
         <main className={styles.container}>
           <div className={styles.poster}>
-          <div className={styles.image}>
-            <div className={styles.circle}></div>
-            <img src={astroBoy} alt="Astro boy" />
-          </div>
             <Text color="white" step={8}>
-              Sorry amigo ☹️
+              Sorry amigo 
             </Text>
             <Text color="white" step={4} style={{ marginTop: '0.5rem' }}>
               This website is for desktop only
@@ -76,8 +72,8 @@ export default function AuthLayout() {
       />
 
       <main className={styles.container}>
-      
         <div className={styles.outlet}>
+        <Text step={8} weight='700'>QUIZZIE</Text>
           <Outlet />
         </div>
       </main>
