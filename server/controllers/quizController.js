@@ -1,10 +1,5 @@
 const Quiz = require('../model/quizModel');
 
-const validateOptions = (options, correct_option) => {
-  return options.length >= 2 && options.length <= 4 &&
-         correct_option >= 0 && correct_option < options.length;
-};
-
 // Create a new quiz
 exports.createQuiz = async (req, res) => {
   try {
@@ -155,6 +150,11 @@ exports.updateAttempts = async (req, res) => {
 
     // Increment attempts
     question.attempts += 1;
+
+    // Increment the attempt count for the selected option
+    if (selectedOptionIndex >= 0 && selectedOptionIndex < question.options.length) {
+      question.options[selectedOptionIndex].attempt_count += 1;
+    }
 
     // Check if the selected option is correct
     if (selectedOptionIndex === question.correct_option) {

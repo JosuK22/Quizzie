@@ -1,0 +1,57 @@
+  .modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .button{
+    display: flex;
+    justify-content: end;
+    width: 100%;
+  }
+  .close {
+    background: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+  }
+  .close:hover{
+    color: rgb(255, 0, 0);
+  }
+  
+  .heading {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .linkContainer {
+    width: 80%;
+  }
+  
+  .linkInput {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    background-color: #f0f0f0;
+    font-size: 16px;
+    
+  }
+  
+  .shareButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 200px;
+  }
+  
+  .shareButton:hover {
+    background-color: #45a049;
+  }
+  

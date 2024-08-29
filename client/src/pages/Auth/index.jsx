@@ -73,7 +73,7 @@ export default function AuthLayout() {
 
       <main className={styles.container}>
         <div className={styles.outlet}>
-        <Text step={8} weight='700'>QUIZZIE</Text>
+        <Text step={9} weight='700'>QUIZZIE</Text>
           <Outlet />
         </div>
       </main>

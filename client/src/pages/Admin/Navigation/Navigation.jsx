@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Text, Modal } from '../../../components/ui';
-import { CreateQuizModal, LogoutModal, QuizTypeModal } from './Modal'; // Make sure QuizTypeModal is imported
+import { CreateQuizModal, LogoutModal, QuizTypeModal, QuizPublishedModal } from './Modal'; // Make sure QuizTypeModal is imported
 import useModal from '../../../hooks/useModal';
 
 import styles from './Navigation.module.css';
@@ -10,25 +10,32 @@ import styles from './Navigation.module.css';
 export default function Navigation() {
   const { isOpen, toggleModal } = useModal();
   const [modalContent, setModalContent] = useState(null);
-  const [quizType, setQuizType] = useState(''); // State to hold the selected quiz type
+  const [quizType, setQuizType] = useState(''); 
   const [quizName, setQuizName] = useState('');
-
-  const handleCreateQuizClick = () => {
-    setModalContent(<CreateQuizModal toggleModal={toggleModal} onContinue={handleContinue} />);
-    toggleModal(); 
-  };
 
   const handleLogoutClick = () => {
     setModalContent(<LogoutModal toggleModal={toggleModal} />);
     toggleModal(); 
   };
 
-  const handleContinue = (selectedType,quizName) => {
-    setQuizName(quizName)
-    setQuizType(selectedType);
-    setModalContent(<QuizTypeModal toggleModal={toggleModal} quizType={selectedType} quizName={quizName}/>);
+  const handleCreateQuizClick = () => {
+    setModalContent(<CreateQuizModal toggleModal={toggleModal} onContinue={handleContinue} />);
+    toggleModal(); 
   };
 
+  const handleContinue = (selectedType, quizName) => {
+    setQuizName(quizName);
+    setQuizType(selectedType);
+    setModalContent(
+      <QuizTypeModal 
+        toggleModal={toggleModal} 
+        quizType={selectedType} 
+        quizName={quizName} 
+        setModalContent={setModalContent}
+      />
+    );
+  };  
+  
   return (
     <>
       <div className={styles.container}>

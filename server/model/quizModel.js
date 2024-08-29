@@ -11,6 +11,10 @@ const OptionSchema = new Schema({
     type: String,
     trim: true,
   },
+  attempt_count: {
+    type: Number,
+    default: 0,  // Initialize attempt_count to 0
+  },
 }, { _id: false });
 
 const QuestionSchema = new Schema({
@@ -103,7 +107,6 @@ const QuizSchema = new Schema({
     required: true,
   },
 }, { timestamps: true });
-
 
 // Middleware to set quiz_type in questions before saving
 QuizSchema.pre('save', function(next) {

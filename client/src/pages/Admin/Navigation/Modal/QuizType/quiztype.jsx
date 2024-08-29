@@ -5,14 +5,14 @@ import toast, { Toaster } from 'react-hot-toast';
 import OptionsContainer from './components/Options/options';
 import { BACKEND_URL } from '../../../../../utils/connection';
 import { AuthContext } from '../../../../../store/AuthProvider';
-import { useQuiz } from '../../../../../store/QuizProvider'; // Import useQuiz
+import { useQuiz } from '../../../../../store/QuizProvider';
+import {QuizPublishedModal} from '../' 
 import styles from './quiztype.module.css';
 
-const QuizCreator = ({ toggleModal, quizType, quizName }) => {
+const QuizCreator = ({ toggleModal, quizType, quizName,  setModalContent }) => {
   const [time, setTime] = useState(null);
-  const quizDetails = { type: quizType, title: quizName };
   const { user } = useContext(AuthContext);
-  const { addQuiz } = useQuiz(); // Use addQuiz from QuizProvider
+  const { addQuiz } = useQuiz(); 
   const [questionsData, setQuestionsData] = useState([
     { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
   ]);
@@ -167,15 +167,12 @@ const QuizCreator = ({ toggleModal, quizType, quizName }) => {
           option_type: q.optionType,
           options: q.options.map(option => ({
             text: option,
-            image_url: '', // You can add logic for image URLs if needed
+            image_url: '', 
           })),
           correct_option: q.selectedOption,
           timer: quizType === 'Q&A' ? (q.timer === null ? null : Number(q.timer)) : null
         }))
       };
-
-      // Log quizDetails to check the payload
-      console.log('Sending quiz details:', quizDetails);
 
       try {
         const response = await fetch(`${BACKEND_URL}/api/v1/quiz`, {
@@ -192,10 +189,13 @@ const QuizCreator = ({ toggleModal, quizType, quizName }) => {
         if (response.ok) {
           toast.success('Quiz created successfully!');
           console.log('Quiz Created:', result);
-
-          // Add the new quiz to the context
-          addQuiz(result); // Add the quiz to the QuizProvider context
-          toggleModal();
+          addQuiz(result); 
+          setModalContent(
+            <QuizPublishedModal 
+              toggleModal={toggleModal}
+            />
+          );
+  
         } else {
           toast.error(`Error: ${result.error}`);
         }

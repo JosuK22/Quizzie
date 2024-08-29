@@ -8,7 +8,7 @@ import { Eye, Lock, Mail, EyeOff } from 'lucide-react';
 
 import { AuthContext } from '../../../store/AuthProvider.jsx';
 import FormInput from '../../../components/form/InputBar/FormInput.jsx';
-import {Button, LineLoader} from '../../../components/ui';
+import {Button} from '../../../components/ui';
 import Form from '../Form/Form.jsx';
 import { BACKEND_URL } from '../../../utils/connection.js';
 
@@ -90,7 +90,7 @@ export default function Login() {
           tertiaryIcon ={<EyeOff/>}
         />
 
-        <Button>{isSubmitting ? <LineLoader /> : 'Login'}</Button>
+        <Button>{isSubmitting ? 'Logging in ....' : 'Login'}</Button>
       </form>
     </Form>
   );

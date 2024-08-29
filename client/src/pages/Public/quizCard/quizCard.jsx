@@ -18,6 +18,7 @@ export default function Card({ quiz }) {
   const [score, setScore] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false); // Track loading state
+  const [hasAttempted, setHasAttempted] = useState(false); // Track if attempt was made for the current question
 
   const totalQuestions = quiz.questions.length;
 
@@ -39,16 +40,54 @@ export default function Card({ quiz }) {
   }, [countdown, isSubmitted]);
 
   const handleQuestionTimeout = async () => {
-    if (selectedOption !== null) {
+    if (selectedOption !== null && !hasAttempted) {
       const correctOption = quiz.questions[currentIndex].correct_option;
       if (selectedOption === correctOption) {
         setScore((prevScore) => prevScore + 1);
       }
+
+      // Update attempts and correct_attempts on the server
+      try {
+        setLoading(true);
+        await fetch(`${BACKEND_URL}/api/v1/quiz/${quiz._id}/update-attempts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            questionIndex: currentIndex,
+            selectedOptionIndex: selectedOption,
+          }),
+        });
+        setHasAttempted(true); // Mark as attempted
+      } catch (err) {
+        console.error('Failed to update attempts:', err);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    // Update attempts and correct_attempts on the server
+    // Move to the next question or submit the quiz
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setCountdown(parseInt(quiz.questions[currentIndex + 1].timer, 10));
+      setSelectedOption(null);
+      setHasAttempted(false); // Reset attempt status for the next question
+    } else {
+      setIsSubmitted(true);
+    }
+  };
+
+  const handleOptionClick = async (index) => {
+    if (selectedOption !== null && hasAttempted) {
+      // Option already selected and attempted
+      return;
+    }
+
+    setSelectedOption(index);
+
+    // Send attempt count update to the server
     try {
-      setLoading(true);
       await fetch(`${BACKEND_URL}/api/v1/quiz/${quiz._id}/update-attempts`, {
         method: 'POST',
         headers: {
@@ -56,21 +95,12 @@ export default function Card({ quiz }) {
         },
         body: JSON.stringify({
           questionIndex: currentIndex,
-          selectedOptionIndex: selectedOption,
+          selectedOptionIndex: index,
         }),
       });
+      setHasAttempted(true); // Mark as attempted
     } catch (err) {
-      console.error('Failed to update attempts:', err);
-    } finally {
-      setLoading(false);
-    }
-
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-      setCountdown(parseInt(quiz.questions[currentIndex + 1].timer, 10));
-      setSelectedOption(null);
-    } else {
-      setIsSubmitted(true);
+      console.error('Failed to update attempt count:', err);
     }
   };
 
@@ -95,10 +125,6 @@ export default function Card({ quiz }) {
   const timerDisplay = countdown > 0
     ? `00 : ${String(countdown).padStart(2, '0')} sec`
     : ' ';
-
-  const handleOptionClick = (index) => {
-    setSelectedOption(index);
-  };
 
   return (
     <div className={styles.container}>
