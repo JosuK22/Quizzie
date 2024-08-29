@@ -1,22 +1,31 @@
+import { useState } from 'react';
 import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
 import copyLink from '../../../../utils/copyLink';
-
+import { Share2, FilePenLine, Trash2 } from 'lucide-react';
+import {Modal, DeleteConfirmation} from '../../../../components/ui';
+import useModal from '../../../../hooks/useModal';
 import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
 
 const QuizTable = ({ onViewAnalysis }) => {
   const { quizzes, deleteQuiz, loading, error } = useQuiz(); // Use deleteQuiz from QuizProvider
+  const { isOpen, toggleModal } = useModal(); // Destructure the modal state and toggle function
+  const [selectedQuizId, setSelectedQuizId] = useState(null); // State to keep track of which quiz is being deleted
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this quiz?')) {
-      try {
-        await deleteQuiz(id); // Use deleteQuiz from QuizProvider
-      } catch (err) {
-        console.error('Error:', err.message);
-      }
+  const handleDeleteClick = (id) => {
+    setSelectedQuizId(id); // Set the quiz ID that is being deleted
+    toggleModal(); // Open the modal
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteQuiz(selectedQuizId); 
+      toggleModal(); 
+    } catch (err) {
+      console.error('Error:', err.message);
     }
   };
 
@@ -30,7 +39,7 @@ const QuizTable = ({ onViewAnalysis }) => {
             <th>Quiz Name</th>
             <th>Created on</th>
             <th>Impression</th>
-            <th>Actions</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -43,30 +52,42 @@ const QuizTable = ({ onViewAnalysis }) => {
               </td>
               <td className={styles.cell}>{quiz.impressions}</td>
               <td className={styles.cell}>
-                <button className={styles.editBtn}>✏️</button>
-                <button
-                  className={styles.deleteBtn}
-                  onClick={() => handleDelete(quiz._id)}
-                >
-                  🗑️
-                </button>
-                <button
-                  className={styles.shareBtn}
-                  onClick={() => copyLink(quiz._id)}
-                >
-                  🔗
-                </button>
-                <button
-                  className={styles.analysisLink}
-                  onClick={() => onViewAnalysis(quiz._id)}
-                >
-                  Question Wise Analysis
-                </button>
+                <div className={styles.butonContainer}>
+                  <button className={styles.editBtn}><FilePenLine size={17}/></button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDeleteClick(quiz._id)}
+                  >
+                    <Trash2 size={17}/>
+                  </button>
+                  <button
+                    className={styles.shareBtn}
+                    onClick={() => copyLink(quiz._id)}
+                  >
+                    <Share2 size={17}/>
+                  </button>
+                  <button
+                    className={styles.analysisLink}
+                    onClick={() => onViewAnalysis(quiz._id)}
+                  >
+                    Question Wise Analysis
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Render the modal with DeleteConfirmation as children */}
+      {isOpen && (
+        <Modal toggleModal={toggleModal}>
+          <DeleteConfirmation
+            onDelete={handleConfirmDelete}
+            onCancel={toggleModal}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

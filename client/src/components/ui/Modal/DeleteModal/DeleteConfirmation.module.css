@@ -1,0 +1,47 @@
+.deleteConfirmation {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    padding-top: 1rem;
+    height: 150px;
+  }
+  
+
+  .buttonGroup {
+    display: flex;
+    margin-top: 4rem;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .confirmBtn {
+    background-color: #e04848;
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 1rem 0px;
+    width: 150px;
+    border-radius: .4rem;
+    cursor: pointer;
+  }
+  
+  .cancelBtn {
+    background-color: #f0f0f0;
+    color: black;
+    font-weight: 700;
+    border: none;
+    padding: 1rem 0px;
+    width: 150px;
+    border-radius: .4rem;
+    cursor: pointer;
+  }
+  
+  .confirmBtn:hover {
+    
+    background-color: #FF4D4D;
+  }
+  
+  .cancelBtn:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+  

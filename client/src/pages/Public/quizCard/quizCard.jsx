@@ -12,7 +12,7 @@ export default function Card({ quiz }) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [countdown, setCountdown] = useState(
-    quiz.questions.length > 0 ? parseInt(quiz.questions[0].timer, 10) : 0
+    quiz.questions.length > 0 ? String(quiz.questions[0].timer) : '0'
   );
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(0);
@@ -33,61 +33,19 @@ export default function Card({ quiz }) {
     }
 
     const intervalId = setInterval(() => {
-      setCountdown((prevCountdown) => prevCountdown - 1);
+      setCountdown((prevCountdown) => (Number(prevCountdown) - 1).toString());
     }, 1000);
 
     return () => clearInterval(intervalId);
   }, [countdown, isSubmitted]);
 
-  const handleQuestionTimeout = async () => {
-    if (selectedOption !== null && !hasAttempted) {
-      const correctOption = quiz.questions[currentIndex].correct_option;
-      if (selectedOption === correctOption) {
-        setScore((prevScore) => prevScore + 1);
-      }
-
-      // Update attempts and correct_attempts on the server
-      try {
-        setLoading(true);
-        await fetch(`${BACKEND_URL}/api/v1/quiz/${quiz._id}/update-attempts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            questionIndex: currentIndex,
-            selectedOptionIndex: selectedOption,
-          }),
-        });
-        setHasAttempted(true); // Mark as attempted
-      } catch (err) {
-        console.error('Failed to update attempts:', err);
-      } finally {
-        setLoading(false);
-      }
+  const updateDatabase = async () => {
+    if (selectedOption === null) {
+      return; // Skip API call if no option is selected
     }
 
-    // Move to the next question or submit the quiz
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-      setCountdown(parseInt(quiz.questions[currentIndex + 1].timer, 10));
-      setSelectedOption(null);
-      setHasAttempted(false); // Reset attempt status for the next question
-    } else {
-      setIsSubmitted(true);
-    }
-  };
-
-  const handleOptionClick = async (index) => {
-    if (selectedOption !== null && hasAttempted) {
-      // Option already selected and attempted
-      return;
-    }
-
-    setSelectedOption(index);
-
-    // Send attempt count update to the server
     try {
+      setLoading(true);
       await fetch(`${BACKEND_URL}/api/v1/quiz/${quiz._id}/update-attempts`, {
         method: 'POST',
         headers: {
@@ -95,20 +53,64 @@ export default function Card({ quiz }) {
         },
         body: JSON.stringify({
           questionIndex: currentIndex,
-          selectedOptionIndex: index,
+          selectedOptionIndex: selectedOption,
         }),
       });
-      setHasAttempted(true); // Mark as attempted
     } catch (err) {
-      console.error('Failed to update attempt count:', err);
+      console.error('Failed to update attempts:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleButtonClick = () => {
+  const handleQuestionTimeout = async () => {
+    if (!hasAttempted) {
+      const correctOption = quiz.questions[currentIndex].correct_option;
+      if (selectedOption === correctOption) {
+        setScore((prevScore) => prevScore + 1);
+      }
+      await updateDatabase();
+      setHasAttempted(true); // Mark as attempted
+    }
+
+    moveToNextQuestion();
+  };
+
+  const moveToNextQuestion = () => {
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setCountdown(String(quiz.questions[currentIndex + 1].timer));
+      setSelectedOption(null);
+      setHasAttempted(false); // Reset attempt status for the next question
+    } else {
+      setIsSubmitted(true);
+    }
+  };
+
+  const handleOptionClick = (index) => {
+    if (selectedOption !== null && hasAttempted) {
+      // Option already selected and attempted
+      return;
+    }
+
+    setSelectedOption(index);
+  };
+
+  const handleButtonClick = async () => {
     if (isSubmitted) {
       return;
     }
-    handleQuestionTimeout();
+
+    if (selectedOption !== null && !hasAttempted) {
+      const correctOption = quiz.questions[currentIndex].correct_option;
+      if (selectedOption === correctOption) {
+        setScore((prevScore) => prevScore + 1);
+      }
+      await updateDatabase();
+      setHasAttempted(true); // Mark as attempted
+    }
+
+    moveToNextQuestion();
   };
 
   if (isSubmitted) {
@@ -186,7 +188,7 @@ Card.propTypes = {
       PropTypes.shape({
         question_text: PropTypes.string.isRequired,
         question_number: PropTypes.number.isRequired,
-        timer: PropTypes.string,
+        timer: PropTypes.string.isRequired, // Or change to number if timer is a number
         options: PropTypes.arrayOf(
           PropTypes.shape({
             text: PropTypes.string.isRequired,

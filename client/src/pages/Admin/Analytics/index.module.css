@@ -3,7 +3,20 @@
   background: #EDEDED;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  padding-top: 8rem;
+  padding-top: 4rem;
   align-items: center;
+}
+
+.header{
+  width: 100%;
+  max-width: 1400px;
+}
+.button{
+  background-color: inherit;
+  border-radius: .4rem;
+  border: none;
+  padding: 1rem 4rem;
+}
+.button:hover{
+  background-color: rgb(255, 255, 255);
 }

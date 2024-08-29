@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Text, StatCard } from '../../../../components/ui';
 import { BACKEND_URL } from '../../../../utils/connection';
-
+import { ArrowLeft } from 'lucide-react';
 import styles from './questionAnalysis.module.css';
 
 const QuestionAnalysis = ({ quizId }) => {
@@ -43,6 +43,7 @@ const QuestionAnalysis = ({ quizId }) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
+      
         <div className={styles.right}>
           <Text step={7} weight='800' color='#5076FF'>{data.name} Question Wise Analysis</Text>
         </div>

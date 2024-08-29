@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Text } from '../../../components/ui';
 import Table from './Table/table';
+import { ArrowLeft } from 'lucide-react';
 import QuestionAnalysis from './Question/questionAnalysis';
 import styles from './index.module.css';
 
@@ -11,10 +11,21 @@ export default function Analytics() {
     setSelectedQuizId(quizId);
   };
 
+  const handleBackToTable = () => {
+    setSelectedQuizId(null);
+  };
+
   return (
     <div className={styles.container}>
       {selectedQuizId ? (
-        <QuestionAnalysis quizId={selectedQuizId} />
+        <>
+          <div className={styles.header}>
+            <button className={styles.button} onClick={handleBackToTable}>
+              <ArrowLeft size={26} />
+            </button>
+          </div>
+          <QuestionAnalysis quizId={selectedQuizId} />
+        </>
       ) : (
         <Table onViewAnalysis={handleViewAnalysis} />
       )}

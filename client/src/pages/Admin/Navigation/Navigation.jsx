@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Text, Modal } from '../../../components/ui';
-import { CreateQuizModal, LogoutModal, QuizTypeModal, QuizPublishedModal } from './Modal'; // Make sure QuizTypeModal is imported
+import { CreateQuizModal, LogoutModal, QuizTypeModal} from './Modal'; 
 import useModal from '../../../hooks/useModal';
 
 import styles from './Navigation.module.css';

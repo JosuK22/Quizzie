@@ -3,7 +3,7 @@
     margin-top: 3rem;
     width: 1200px;
     text-align: center;
-    
+
   }
   
   .quizTable {
@@ -11,6 +11,7 @@
     border-collapse: separate;
     border-spacing: 0 0.5rem; 
     margin-top: 3rem;
+
   }
   
   .quizTable th,
@@ -70,7 +71,13 @@
     background-color: transparent;
     cursor: pointer;
   }
-  
+  .butonContainer{
+    gap: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
   .editBtn {
     color: #6b21a8;
   }
