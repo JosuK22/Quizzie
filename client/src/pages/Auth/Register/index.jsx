@@ -128,7 +128,7 @@ export default function Register() {
           tertiaryIcon ={<EyeOff/>}
         />
 
-        <Button>{isSubmitting ? 'Registering...' : 'Register'}</Button>
+        <Button color='primary' variant={'form'}><Text color='white' weight='700'>{isSubmitting ? 'Registering...' : 'Register'}</Text></Button>
       </form>
     </Form>
   );

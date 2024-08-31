@@ -1,6 +1,5 @@
 import { Toaster } from 'react-hot-toast';
 import { Outlet, useNavigate } from 'react-router-dom';
-import astroBoy from '../../assets/astronut.png';
 import { Text } from '../../components/ui';
 import { useContext, useEffect, useState } from 'react'; 
 import { AuthContext } from '../../store/AuthProvider';

@@ -18,9 +18,9 @@ export default function Button({
 }
 
 Button.propTypes = {
-  children: PropTypes.string,
+  // children: PropTypes.string,
   toggle: PropTypes.func,
   color: PropTypes.oneOf(['primary', 'error', 'success', 'neutral']),
-  variant: PropTypes.oneOf(['outline','jumbo', 'ghost']),
+  variant: PropTypes.oneOf(['outline','jumbo', 'ghost', 'form']),
   onClick: PropTypes.func,
 };

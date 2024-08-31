@@ -11,13 +11,12 @@
     border-collapse: separate;
     border-spacing: 0 0.5rem; 
     margin-top: 3rem;
-
   }
   
   .quizTable th,
   .quizTable td {
     padding: 15px;
-    text-align: left;
+    text-align: center;
   }
   
   .quizTable th {

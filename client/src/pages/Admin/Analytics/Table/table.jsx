@@ -3,7 +3,7 @@ import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
 import copyLink from '../../../../utils/copyLink';
 import { Share2, FilePenLine, Trash2 } from 'lucide-react';
-import {Modal, DeleteConfirmation} from '../../../../components/ui';
+import { Modal, DeleteConfirmation, QuizQuestionDetails } from '../../../../components/ui';
 import useModal from '../../../../hooks/useModal';
 import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
 
@@ -11,12 +11,20 @@ const QuizTable = ({ onViewAnalysis }) => {
   const { quizzes, deleteQuiz, loading, error } = useQuiz(); // Use deleteQuiz from QuizProvider
   const { isOpen, toggleModal } = useModal(); // Destructure the modal state and toggle function
   const [selectedQuizId, setSelectedQuizId] = useState(null); // State to keep track of which quiz is being deleted
+  const [modalContent, setModalContent] = useState(null); // State to keep track of modal content
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   const handleDeleteClick = (id) => {
     setSelectedQuizId(id); // Set the quiz ID that is being deleted
+    setModalContent('delete'); // Set the modal content type to delete confirmation
+    toggleModal(); // Open the modal
+  };
+
+  const handleEditClick = (id) => {
+    setSelectedQuizId(id); // Set the quiz ID that is being edited
+    setModalContent('details'); // Set the modal content type to quiz details
     toggleModal(); // Open the modal
   };
 
@@ -53,7 +61,12 @@ const QuizTable = ({ onViewAnalysis }) => {
               <td className={styles.cell}>{quiz.impressions}</td>
               <td className={styles.cell}>
                 <div className={styles.butonContainer}>
-                  <button className={styles.editBtn}><FilePenLine size={17}/></button>
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => handleEditClick(quiz._id)}
+                  >
+                    <FilePenLine size={17}/>
+                  </button>
                   <button
                     className={styles.deleteBtn}
                     onClick={() => handleDeleteClick(quiz._id)}
@@ -79,13 +92,17 @@ const QuizTable = ({ onViewAnalysis }) => {
         </tbody>
       </table>
 
-      {/* Render the modal with DeleteConfirmation as children */}
+      {/* Render the modal with different content based on modalContent state */}
       {isOpen && (
         <Modal toggleModal={toggleModal}>
-          <DeleteConfirmation
-            onDelete={handleConfirmDelete}
-            onCancel={toggleModal}
-          />
+          {modalContent === 'delete' ? (
+            <DeleteConfirmation
+              onDelete={handleConfirmDelete}
+              onCancel={toggleModal}
+            />
+          ) : (
+            <QuizQuestionDetails quizId={selectedQuizId} onClose={toggleModal} />
+          )}
         </Modal>
       )}
     </div>

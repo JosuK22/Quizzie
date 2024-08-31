@@ -67,6 +67,73 @@ exports.updateQuiz = async (req, res) => {
   }
 };
 
+
+// ----------------------------------------------updated Update Quiz ----------------------------//
+
+// exports.updateQuiz = async (req, res) => {
+//   const { id } = req.params;
+//   const updates = req.body;
+
+//   try {
+//     const quiz = await Quiz.findById(id);
+//     if (!quiz) return res.status(404).json({ error: 'Quiz not found' });
+
+//     // Update only allowed fields
+//     const allowedFields = ['questions'];
+//     const updateFields = Object.keys(updates).filter(field => allowedFields.includes(field));
+
+//     updateFields.forEach(field => {
+//       if (field === 'questions') {
+//         // Validate and update questions
+//         updates.questions.forEach((question, index) => {
+//           const originalQuestion = quiz.questions[index];
+//           if (!originalQuestion) return;
+
+//           // Check if options length is correct
+//           if (question.options) {
+//             if (question.options.length !== originalQuestion.options.length) {
+//               throw new Error(`Cannot change number of options for question ${index + 1}`);
+//             }
+
+//             // Validate and update options
+//             question.options.forEach((option, optionIndex) => {
+//               if (originalQuestion.options[optionIndex]) {
+//                 // Ensure that the correct option is not changed
+//                 if (option.correct !== undefined && option.correct !== originalQuestion.options[optionIndex].correct) {
+//                   throw new Error(`Cannot change the correctness of option ${optionIndex + 1} for question ${index + 1}`);
+//                 }
+
+//                 // Update option text and image URL
+//                 originalQuestion.options[optionIndex].text = option.text;
+//                 originalQuestion.options[optionIndex].image_url = option.image_url;
+//               }
+//             });
+//           }
+
+//           // Validate question type has not changed
+//           if (question.type !== undefined && question.type !== originalQuestion.type) {
+//             throw new Error(`Cannot change the type of question ${index + 1}`);
+//           }
+
+//           // Check and update timer
+//           if (question.timer !== undefined) {
+//             originalQuestion.timer = question.timer;
+//           }
+
+//           // Other question updates
+//           originalQuestion.question_text = question.question_text || originalQuestion.question_text;
+//         });
+//       }
+//     });
+
+//     await quiz.save();
+//     res.status(200).json(quiz);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
+
 // Delete a quiz
 exports.deleteQuiz = async (req, res) => {
   const { id } = req.params;

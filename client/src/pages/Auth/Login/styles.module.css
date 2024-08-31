@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 2.2rem;
   align-items: center;
+  justify-content: end;
 }
 
 .form button {

@@ -1,8 +1,7 @@
 // Navigation.jsx
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Text, Modal } from '../../../components/ui';
-import { CreateQuizModal, LogoutModal, QuizTypeModal} from './Modal'; 
+import { Text, Modal, LogoutModal, QuizDetails, QuizQuestionDetails } from '../../../components/ui';
 import useModal from '../../../hooks/useModal';
 
 import styles from './Navigation.module.css';
@@ -19,7 +18,7 @@ export default function Navigation() {
   };
 
   const handleCreateQuizClick = () => {
-    setModalContent(<CreateQuizModal toggleModal={toggleModal} onContinue={handleContinue} />);
+    setModalContent(<QuizDetails toggleModal={toggleModal} onContinue={handleContinue} />);
     toggleModal(); 
   };
 
@@ -27,7 +26,7 @@ export default function Navigation() {
     setQuizName(quizName);
     setQuizType(selectedType);
     setModalContent(
-      <QuizTypeModal 
+      <QuizQuestionDetails 
         toggleModal={toggleModal} 
         quizType={selectedType} 
         quizName={quizName} 

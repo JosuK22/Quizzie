@@ -1,15 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
-import { Text } from '../../../../../components/ui';
-import Timer from './components/Timer/timer';
+import Text from '../../../Text/Text';
+
+import Timer from './Timer/timer';
+import OptionsContainer from './Options/options';
+
 import toast, { Toaster } from 'react-hot-toast';
-import OptionsContainer from './components/Options/options';
 import { BACKEND_URL } from '../../../../../utils/connection';
 import { AuthContext } from '../../../../../store/AuthProvider';
 import { useQuiz } from '../../../../../store/QuizProvider';
-import {QuizPublishedModal} from '../' 
-import styles from './quiztype.module.css';
+import QuizPublished from '../QuizCreatorModal_3/QuizPublished'; 
+import styles from './questiondetails.module.css';
 
-const QuizCreator = ({ toggleModal, quizType, quizName,  setModalContent }) => {
+const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) => {
   const [time, setTime] = useState(null);
   const { user } = useContext(AuthContext);
   const { addQuiz } = useQuiz(); 
@@ -191,8 +193,9 @@ const QuizCreator = ({ toggleModal, quizType, quizName,  setModalContent }) => {
           console.log('Quiz Created:', result);
           addQuiz(result); 
           setModalContent(
-            <QuizPublishedModal 
+            <QuizPublished 
               toggleModal={toggleModal}
+              quizId={result._id}
             />
           );
   
@@ -279,4 +282,4 @@ const QuizCreator = ({ toggleModal, quizType, quizName,  setModalContent }) => {
   );
 };
 
-export default QuizCreator;
+export default QuestionDetails;

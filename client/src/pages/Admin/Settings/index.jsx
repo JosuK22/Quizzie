@@ -8,8 +8,8 @@ import { useContext, useEffect, useState } from 'react';
 import { Eye, User, Lock, Mail, EyeOff } from 'lucide-react';
 import { AuthContext } from '../../../store/AuthProvider';
 import { BACKEND_URL } from '../../../utils/connection';
-import CreateModal from '../Navigation/Modal/CreateQuiz/createquiz';
-import QuizType from '../Navigation/Modal/QuizType/quiztype'
+// import CreateModal from '../Navigation/Modal/CreateQuiz/createquiz';
+// import QuizType from '../Navigation/Modal/QuizType/quiztype'
 import styles from './index.module.css';
 
 

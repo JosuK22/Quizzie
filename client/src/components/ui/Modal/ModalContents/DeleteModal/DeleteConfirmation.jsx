@@ -1,5 +1,5 @@
 import styles from './DeleteConfirmation.module.css';
-import {Text} from '../../index'
+import Text from '../../../Text/Text';
 
 const DeleteConfirmation = ({ onDelete, onCancel }) => {
   return (

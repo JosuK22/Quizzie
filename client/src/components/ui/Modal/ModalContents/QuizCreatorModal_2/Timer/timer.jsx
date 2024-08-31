@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Text } from '../../../../../../../components/ui';
+import Text from '../../../../Text/Text';
 import styles from './timer.module.css';
 
 const Timer = ({ onTimeChange }) => {

@@ -1,5 +1,4 @@
-  
-  .modalContainer {
+  .modalContent {
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -28,6 +27,7 @@
     box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.2);
   }
   .buttonContainer {
+    margin-top: 1rem;
     display: flex;
     justify-content: space-between;
   }
@@ -55,7 +55,10 @@
   .cancelButton:hover, .continueButton:hover {
     opacity: 0.9;
   }
-  
+  .cancelButton:hover{
+    background-color:red ;
+    color: #fff;
+  }
   .quizTypeContainer {
     display: flex;
     width: 100%;

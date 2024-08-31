@@ -45,7 +45,7 @@ const QuestionAnalysis = ({ quizId }) => {
       <div className={styles.header}>
       
         <div className={styles.right}>
-          <Text step={7} weight='800' color='#5076FF'>{data.name} Question Wise Analysis</Text>
+          <Text step={7} weight='800' color='#5076FF'>{data.name} : Question Wise Analysis</Text>
         </div>
 
         <div className={styles.left}>

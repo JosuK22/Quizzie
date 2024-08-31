@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { Button, Text } from "../../../../../components/ui";
+import Button from '../../../Button/Button';
+import Text from '../../../Text/Text';
 import { AuthContext } from '../../../../../store/AuthProvider';
 import styles from './logout.module.css';
 
