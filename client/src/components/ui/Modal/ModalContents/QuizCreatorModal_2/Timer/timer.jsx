@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import Text from '../../../../Text/Text';
 import styles from './timer.module.css';
 
-const Timer = ({ onTimeChange }) => {
-  const [selectedTime, setSelectedTime] = useState(null); // null means the timer is off
+const Timer = ({ onTimeChange, initialTime }) => {
+  const [selectedTime, setSelectedTime] = useState(initialTime ? String(initialTime) : 'off');
+
+  useEffect(() => {
+    setSelectedTime(initialTime ? String(initialTime) : 'off');
+  }, [initialTime]);
 
   useEffect(() => {
     if (onTimeChange) {
@@ -15,8 +19,8 @@ const Timer = ({ onTimeChange }) => {
     <div className={styles.timerContainer}>
       <Text step={4} weight='700' color='gray'>TIMER</Text>
       <div
-        className={`${styles.timerButton} ${selectedTime !== null ? styles.offSelected : ''}`}
-        onClick={() => setSelectedTime(null)}
+        className={`${styles.timerButton} ${selectedTime === 'off' ? styles.selected : ''}`}
+        onClick={() => setSelectedTime('off')}
       >
         OFF
       </div>

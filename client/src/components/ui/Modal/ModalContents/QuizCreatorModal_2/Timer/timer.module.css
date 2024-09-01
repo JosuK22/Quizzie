@@ -6,8 +6,8 @@
   }
   
   .timerButton {
-    background-color: #f44336;
-    color: white;
+    background-color: #f1f1f1;
+    color: #aaa;
     padding: .5rem 0px;
     width: 5rem;
     border-radius: 10px;
@@ -16,6 +16,10 @@
     font-weight: bold;
     text-align: center;
     border: 2px solid transparent;
+  }
+  .timerButton.selected{
+    background-color: #f44336;
+    color: #ffffff;
   }
   .timerButton:hover{
     border:2px solid #f44336;

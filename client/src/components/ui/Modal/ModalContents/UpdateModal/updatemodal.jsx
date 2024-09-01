@@ -22,8 +22,6 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
   const [quizType, setQuizType] = useState('Poll');
   const [quizName, setQuizName] = useState('');
 
-//   console.log(questionsData);
-
   useEffect(() => {
     const fetchQuizDetails = async () => {
       try {
@@ -191,7 +189,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
     }
 
     if (questionsData.some(q => !q.question_text.trim())) {
-      toast.error('Please fill out all questions.');
+      toast.error('Please fill in all the questions.');
       setErrorState({
         questionError: true,
         optionsError: false,
@@ -201,104 +199,58 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
       return false;
     }
 
-    for (const q of questionsData) {
-      const allOptionsFilled = q.options.every(option => {
-        const isTextValid = option.text.trim();
-        const isImageValid = option.image_url ? isValidUrl(option.image_url) : true;
-        const isAdditionalUrlValid = q.option_type === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true;
-
-        return (q.option_type === 'text' && isTextValid) ||
-               (q.option_type === 'image' && isImageValid) ||
-               (q.option_type === 'textImage' && isTextValid && isImageValid && isAdditionalUrlValid);
+    if (questionsData.some(q => q.options.some(o => !o.text.trim() && !isValidUrl(o.image_url)))) {
+      toast.error('Please provide valid options.');
+      setErrorState({
+        questionError: false,
+        optionsError: true,
+        optionSelectedError: false
       });
-
-      if (!allOptionsFilled) {
-        toast.error('Please use valid URLs.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-
-      if (q.options.length < 2 || q.options.length > 4) {
-        toast.error('Each question must have between 2 and 4 options.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-
-      if (q.option_type === 'text' && q.options.some(opt => !opt.text.trim())) {
-        toast.error('Please provide text for all options.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-
-      if (q.option_type === 'image' && q.options.some(opt => !isValidUrl(opt.image_url))) {
-        toast.error('Please provide valid image URLs.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-
-      if (q.option_type === 'textImage' && q.options.some(opt => !opt.text.trim() || !isValidUrl(opt.image_url))) {
-        toast.error('Please provide valid text and image URLs.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-    }
-
-    if (hasError) {
+      hasError = true;
       return false;
     }
 
-    return true;
+    if (questionsData.some(q => q.correct_option === null)) {
+      toast.error('Please select the correct option for each question.');
+      setErrorState({
+        questionError: false,
+        optionsError: false,
+        optionSelectedError: true
+      });
+      hasError = true;
+      return false;
+    }
+
+    setErrorState({
+      questionError: false,
+      optionsError: false,
+      optionSelectedError: false
+    });
+
+    return !hasError;
   };
 
   const handleUpdateQuiz = async () => {
     if (validateQuiz()) {
-      const quizDetails = {
+      const updatedQuiz = {
         name: quizName,
         type: quizType,
-        questions: questionsData.map(q => ({
-          ...q,
-          timer: q.timer !== null ? parseInt(q.timer, 10) : null
-        })),
+        questions: questionsData
       };
 
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/quiz/update/${quizId}`, {
-          method: 'PATCH',
+        const response = await fetch(`${BACKEND_URL}/api/v1/quiz/${quizId}`, {
+          method: 'PUT',
           headers: {
-            'Authorization': `Bearer ${user.token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           },
-          body: JSON.stringify(quizDetails),
+          body: JSON.stringify(updatedQuiz)
         });
         const result = await response.json();
         if (response.ok) {
           toast.success('Quiz updated successfully!');
-          toggleModal();
+          setModalContent('QuizUpdated');
         } else {
           toast.error(`Error: ${result.error}`);
         }
@@ -347,7 +299,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
               name={`optionType-${selectedQuestionIndex}`}
               value={type}
               checked={questionsData[selectedQuestionIndex]?.option_type === type}
-              onChange={() => handleOptionTypeChange(type)}
+              readOnly
             /> {type.charAt(0).toUpperCase() + type.slice(1).replace(/([A-Z])/g, ' $1')}
           </label>
         ))}
@@ -363,11 +315,13 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
           onRemoveOption={handleRemoveOption}
           onAddOption={handleAddOption}
           errorState={errorState}
-          quizType={quizType} 
+          quizType={quizType}
+          isOptionSelectionDisabled={true} // Disabling option selection during update
+          canModifyOptions={false}  
         />
-        {quizType === 'Timed' && (
+        {quizType === 'Q&A' && (
           <div className={styles.timer}>
-            <Timer onTimeChange={setTime} />
+            <Timer onTimeChange={setTime} initialTime={questionsData[selectedQuestionIndex]?.timer} />
           </div>
         )}
       </div>
