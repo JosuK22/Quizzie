@@ -6,12 +6,15 @@ import { Share2, FilePenLine, Trash2 } from 'lucide-react';
 import { Modal, DeleteConfirmation, QuizQuestionDetails } from '../../../../components/ui';
 import useModal from '../../../../hooks/useModal';
 import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
+import axios from 'axios';
+import { BACKEND_URL } from '../../../../utils/connection';
 
 const QuizTable = ({ onViewAnalysis }) => {
   const { quizzes, deleteQuiz, loading, error } = useQuiz(); // Use deleteQuiz from QuizProvider
   const { isOpen, toggleModal } = useModal(); // Destructure the modal state and toggle function
   const [selectedQuizId, setSelectedQuizId] = useState(null); // State to keep track of which quiz is being deleted
   const [modalContent, setModalContent] = useState(null); // State to keep track of modal content
+  const [quizDetails, setQuizDetails] = useState(null); // State to store quiz details
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -22,10 +25,16 @@ const QuizTable = ({ onViewAnalysis }) => {
     toggleModal(); // Open the modal
   };
 
-  const handleEditClick = (id) => {
-    setSelectedQuizId(id); // Set the quiz ID that is being edited
-    setModalContent('details'); // Set the modal content type to quiz details
-    toggleModal(); // Open the modal
+  const handleEditClick = async (id) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/${id}`);
+      setQuizDetails(response.data); // Set the quiz details
+      setSelectedQuizId(id); // Set the quiz ID that is being edited
+      setModalContent('details'); // Set the modal content type to quiz details
+      toggleModal(); // Open the modal
+    } catch (err) {
+      console.error('Error fetching quiz details:', err.message);
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -101,7 +110,13 @@ const QuizTable = ({ onViewAnalysis }) => {
               onCancel={toggleModal}
             />
           ) : (
-            <QuizQuestionDetails quizId={selectedQuizId} onClose={toggleModal} />
+            <QuizQuestionDetails 
+              toggleModal={toggleModal}
+              quizType={quizDetails?.type || ''}
+              quizName={quizDetails?.name || ''}
+              setModalContent={setModalContent}
+              quizData={quizDetails} // Pass quiz data to QuestionDetails
+            />
           )}
         </Modal>
       )}

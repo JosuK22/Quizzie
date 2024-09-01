@@ -9,7 +9,8 @@ const OptionsContainer = ({
   onRemoveOption, 
   onAddOption,
   errorState,
-  quizType // Add quizType prop
+  optionType,
+  quizType
 }) => {
   return (
     <div className={styles.optionsContainer}>
@@ -24,14 +25,51 @@ const OptionsContainer = ({
               className={styles.optionRadio}
             />
           )}
-          <input
-            className={`${styles.optionInput} ${errorState.optionsError && !option.trim() ? styles.error : ''}`}
-            type="text"
-            value={option}
-            placeholder="Text"
-            style={{ backgroundColor: selectedOptionIndex === optionIndex ? 'lightgreen' : 'transparent' }}
-            onChange={(e) => onOptionChange(optionIndex, e.target.value)}
-          />
+          {optionType === 'text' && (
+            <>
+              <input
+                className={`${styles.optionInput} ${errorState.optionsError && !option.text.trim() ? styles.error : ''}`}
+                type="text"
+                value={option.text}
+                placeholder="Text"
+                style={{ backgroundColor: selectedOptionIndex === optionIndex ? 'lightgreen' : 'transparent' }}
+                onChange={(e) => onOptionChange(optionIndex, { text: e.target.value })}
+              />
+            </>
+          )}
+          {optionType === 'image' && (
+            <>
+              <input
+                className={`${styles.optionInput} ${errorState.optionsError && !option.image_url.trim() ? styles.error : ''}`}
+                type="text"
+                value={option.image_url}
+                placeholder="Enter the URL"
+                style={{ backgroundColor: selectedOptionIndex === optionIndex ? 'lightgreen' : 'transparent' }}
+                onChange={(e) => onOptionChange(optionIndex, { image_url: e.target.value })}
+              />
+            </>
+          )}
+          {optionType === 'textImage' && (
+            <>
+              <input
+                className={`${styles.optionInput} ${styles.sgasgh}  ${errorState.optionsError && !option.text.trim() ? styles.error : ''}`}
+                type="text"
+                value={option.text}
+                placeholder="Text"
+                style={{ backgroundColor: selectedOptionIndex === optionIndex ? 'lightgreen' : 'transparent' }}
+                onChange={(e) => onOptionChange(optionIndex, { text: e.target.value })}
+              />
+              <input
+                className={`${styles.optionInput} ${errorState.optionsError && !option.image_url.trim() ? styles.error : ''}`}
+                type="text"
+                value={option.image_url}
+                placeholder="Image URL"
+                style={{ backgroundColor: selectedOptionIndex === optionIndex ? 'lightgreen' : 'transparent' }}
+                onChange={(e) => onOptionChange(optionIndex, { image_url: e.target.value })}
+              />
+            </>
+          )}
+          
           {options.length > 2 && (
             <button className={styles.removeButton} onClick={() => onRemoveOption(optionIndex)}>
               <Trash2 color='red' size={18}/>
@@ -47,6 +85,5 @@ const OptionsContainer = ({
     </div>
   );
 };
-
 
 export default OptionsContainer;

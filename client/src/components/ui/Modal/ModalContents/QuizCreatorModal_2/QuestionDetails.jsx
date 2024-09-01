@@ -1,9 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import Text from '../../../Text/Text';
-
 import Timer from './Timer/timer';
 import OptionsContainer from './Options/options';
-
 import toast, { Toaster } from 'react-hot-toast';
 import { BACKEND_URL } from '../../../../../utils/connection';
 import { AuthContext } from '../../../../../store/AuthProvider';
@@ -11,12 +9,12 @@ import { useQuiz } from '../../../../../store/QuizProvider';
 import QuizPublished from '../QuizCreatorModal_3/QuizPublished'; 
 import styles from './questiondetails.module.css';
 
-const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) => {
+const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) => {
   const [time, setTime] = useState(null);
   const { user } = useContext(AuthContext);
   const { addQuiz } = useQuiz(); 
   const [questionsData, setQuestionsData] = useState([
-    { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: null }
+    { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: null }
   ]);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [errorState, setErrorState] = useState({
@@ -40,11 +38,27 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
     }
   };
 
-  const handleOptionChange = (optionIndex, value) => {
+  const handleOptionChange = (optionIndex, updatedOption) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[selectedQuestionIndex].options[optionIndex] = value;
+    updatedQuestions[selectedQuestionIndex].options[optionIndex] = {
+      ...updatedQuestions[selectedQuestionIndex].options[optionIndex],
+      ...updatedOption
+    };
+    
+    // Validate URL fields
+    // const isImageUrlValid = updatedOption.image_url ? isValidUrl(updatedOption.image_url) : true;
+    // const isAdditionalUrlValid = updatedOption.additional_url ? isValidUrl(updatedOption.additional_url) : true;
+  
+    // if (updatedOption.image_url && !isImageUrlValid) {
+    //   toast.error('Invalid URL format for image URL.');
+    // }
+  
+    // if (updatedOption.additional_url && !isAdditionalUrlValid) {
+    //   toast.error('Invalid URL format for additional URL.');
+    // }
+  
     setQuestionsData(updatedQuestions);
-    if (value.trim()) {
+    if (Object.values(updatedOption).some(value => value.trim())) {
       setErrorState(prevState => ({
         ...prevState,
         optionsError: false,
@@ -52,24 +66,55 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
       }));
     }
   };
+  
 
   const handleAddOption = () => {
     const updatedQuestions = [...questionsData];
     if (updatedQuestions[selectedQuestionIndex].options.length < 5) {
-      updatedQuestions[selectedQuestionIndex].options.push('');
+      const newOption = {};
+      if (updatedQuestions[selectedQuestionIndex].optionType === 'text') {
+        newOption.text = '';
+        newOption.image_url = '';
+      } else if (updatedQuestions[selectedQuestionIndex].optionType === 'image') {
+        newOption.text = '';
+        newOption.image_url = '';
+      } else if (updatedQuestions[selectedQuestionIndex].optionType === 'textImage') {
+        newOption.text = '';
+        newOption.image_url = '';
+        newOption.additional_url = '';
+      }
+      updatedQuestions[selectedQuestionIndex].options.push(newOption);
       setQuestionsData(updatedQuestions);
     }
   };
 
   const handleRemoveOption = (optionIndex) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.filter((_, i) => i !== optionIndex);
-    setQuestionsData(updatedQuestions);
+    // Ensure at least two options remain
+    if (updatedQuestions[selectedQuestionIndex].options.length > 2) {
+      updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.filter((_, i) => i !== optionIndex);
+      setQuestionsData(updatedQuestions);
+    }
   };
 
   const handleOptionTypeChange = (type) => {
     const updatedQuestions = [...questionsData];
     updatedQuestions[selectedQuestionIndex].optionType = type;
+    updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.map(option => {
+      const newOption = {};
+      if (type === 'text') {
+        newOption.text = option.text || '';
+        newOption.image_url = option.image_url || '';
+      } else if (type === 'image') {
+        newOption.text = option.text || '';
+        newOption.image_url = option.image_url || '';
+      } else if (type === 'textImage') {
+        newOption.text = option.text || '';
+        newOption.image_url = option.image_url || '';
+        newOption.additional_url = option.additional_url || '';
+      }
+      return newOption;
+    });
     setQuestionsData(updatedQuestions);
   };
 
@@ -83,7 +128,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
     if (questionsData.length < 5) {
       setQuestionsData([
         ...questionsData,
-        { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: time }
+        { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
       ]);
       setSelectedQuestionIndex(questionsData.length);
     }
@@ -91,7 +136,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
 
   const handleCancel = () => {
     setQuestionsData([
-      { question: '', options: ['', ''], optionType: 'text', selectedOption: null, timer: time }
+      { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
     ]);
     setSelectedQuestionIndex(0);
     toggleModal(); 
@@ -107,53 +152,75 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
     }
   };
 
-  const validateQuiz = () => {
-    let hasError = false;
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
-    if (questionsData.some(q => !q.question.trim())) {
-      toast.error('Please fill out all questions.');
+  const validateQuiz = () => {
+  let hasError = false;
+
+  if (questionsData.some(q => !q.question.trim())) {
+    toast.error('Please fill out all questions.');
+    setErrorState({
+      questionError: true,
+      optionsError: false,
+      optionSelectedError: false
+    });
+    hasError = true;
+    return false;
+  }
+
+  for (const q of questionsData) {
+    const allOptionsFilled = q.options.every(option => {
+      const isTextValid = option.text.trim();
+      const isImageValid = option.image_url ? isValidUrl(option.image_url) : true; // Validate URL
+      const isAdditionalUrlValid = q.optionType === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true; // Validate URL if applicable
+      
+      return (q.optionType === 'text' && isTextValid) ||
+             (q.optionType === 'image' && isImageValid) ||
+             (q.optionType === 'textImage' && isTextValid && isImageValid && isAdditionalUrlValid);
+    });
+
+    if (!allOptionsFilled) {
+      toast.error(' Please use valid URLs.');
       setErrorState({
-        questionError: true,
-        optionsError: false,
+        questionError: false,
+        optionsError: true,
         optionSelectedError: false
       });
       hasError = true;
       return false;
     }
 
-    for (const q of questionsData) {
-      const allOptionsFilled = q.options.every(option => option.trim());
-      if (!allOptionsFilled) {
-        toast.error('Please fill out all options.');
-        setErrorState({
-          questionError: false,
-          optionsError: true,
-          optionSelectedError: false
-        });
-        hasError = true;
-        return false;
-      }
-
-      if (q.optionType === 'text' && q.selectedOption === null) {
-        toast.error('Select an answer for the question.');
-        setErrorState({
-          questionError: false,
-          optionsError: false,
-          optionSelectedError: true
-        });
-        hasError = true;
-        return false;
-      }
+    const isOptionSelected = q.selectedOption !== null &&
+                           q.selectedOption >= 0 &&
+                           q.selectedOption < q.options.length;
+    if (!isOptionSelected) {
+      toast.error('Select an answer for the question.');
+      setErrorState({
+        questionError: false,
+        optionsError: false,
+        optionSelectedError: true
+      });
+      hasError = true;
+      return false;
     }
+  }
 
-    setErrorState({
-      questionError: false,
-      optionsError: false,
-      optionSelectedError: false
-    });
-    return true;
-  };
+  setErrorState({
+    questionError: false,
+    optionsError: false,
+    optionSelectedError: false
+  });
+  return true;
+};
 
+  
   const handleTimeChange = (newTime) => {
     setTime(newTime);
   };
@@ -168,8 +235,9 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
           question_text: q.question,
           option_type: q.optionType,
           options: q.options.map(option => ({
-            text: option,
-            image_url: '', 
+            text: option.text,
+            image_url: option.image_url,
+            additional_url: option.additional_url || ''
           })),
           correct_option: q.selectedOption,
           timer: quizType === 'Q&A' ? (q.timer === null ? null : Number(q.timer)) : null
@@ -256,6 +324,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName,  setModalContent }) 
       <div className={styles.midsection}>
         <OptionsContainer
           options={questionsData[selectedQuestionIndex]?.options || []}
+          optionType={questionsData[selectedQuestionIndex]?.optionType || 'text'}
           selectedOptionIndex={questionsData[selectedQuestionIndex]?.selectedOption}
           onOptionChange={handleOptionChange}
           onRadioChange={handleRadioChange}

@@ -1,6 +1,6 @@
 .optionsContainer {
     margin-bottom: 20px;
-    width: 60%;
+    width: 100%;
     height: 250px;
   }
   
@@ -10,6 +10,7 @@
     margin-bottom: 10px;
     border-radius: 5px;
     gap: 10px;
+    /* background-color: yellow; */
   }
   
   .optionRadio {
@@ -38,7 +39,7 @@
   }
   
   .addOptionButton {
-    background-color: transparent;
+    background-color: #f1f1f1;
     color: #A0A0A0;
     border: none;
     cursor: pointer;
@@ -47,9 +48,11 @@
     padding: 1rem 2rem;
     height: 3rem;
     border-radius: 10px;
-    box-shadow: 0px 1px 6px rgba(76, 175, 80, 0.9);
+    box-shadow: 0px 0px 2px rgba(92, 94, 92, 0.5);
   }
-  
+  .sgasgh{
+    width: 50%;
+  }
   .addOptionButton:hover {
     background-color: rgb(76, 175, 80);
     color: white;

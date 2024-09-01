@@ -1,21 +1,42 @@
 const mongoose = require('mongoose');
-
 const { Schema } = mongoose;
+
+// URL validation function
+const isValidUrl = (url) => {
+  const urlPattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+    '((([a-zA-Z0-9$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)' + // domain name
+    '|localhost|' + // localhost
+    '((\\d{1,3}\\.){3}\\d{1,3})' + // IP address (v4)
+    '|([a-fA-F]{1,4}:){7}[a-fA-F]{1,4})' + // IP address (v6)
+    '(\\:\\d+)?' + // port
+    '(\\/[-a-zA-Z0-9@:%_\\+~#=]*)*' + // path
+    '(\\?[;&a-zA-Z0-9%_\\+~#=]*)?' + // query string
+    '(\\#[-a-zA-Z0-9_]*)?$',
+    'i' // case-insensitive
+  );
+  return urlPattern.test(url);
+};
 
 const OptionSchema = new Schema({
   text: {
     type: String,
     trim: true,
+    required: function() { return this.optionType === 'text' || this.optionType === 'textImage'; }
   },
   image_url: {
     type: String,
     trim: true,
-  },
-  attempt_count: {
-    type: Number,
-    default: 0,  // Initialize attempt_count to 0
+    required: function() { return this.optionType === 'image' || this.optionType === 'textImage'; },
+    validate: {
+      validator: function(value) {
+        return !value || isValidUrl(value); // Validate URL or allow empty string
+      },
+      message: 'Invalid URL format'
+    }
   },
 }, { _id: false });
+
 
 const QuestionSchema = new Schema({
   question_number: {
@@ -58,7 +79,7 @@ const QuestionSchema = new Schema({
     type: Number,
     default: 0,
   },
-  correct_attempts:{
+  correct_attempts: {
     type: Number,
     default: 0,
   },
@@ -123,6 +144,7 @@ QuizSchema.pre('save', function(next) {
 
   next();
 });
+
 
 const Quiz = mongoose.model('Quiz', QuizSchema);
 

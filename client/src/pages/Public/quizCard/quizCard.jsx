@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Text } from '../../../components/ui';
 import VictoryCard from '../victoryCard/victorycard';
 import styles from './quizcard.module.css';
-import { BACKEND_URL } from '../../../utils/connection'; // Add this import
+import { BACKEND_URL } from '../../../utils/connection'; // Ensure this import
 
 export default function Card({ quiz }) {
   if (!quiz || !quiz.questions || quiz.questions.length === 0) {
@@ -151,17 +151,30 @@ export default function Card({ quiz }) {
         </div>
         <div className={styles.option_grid}>
           {options && options.length > 0 ? (
-            options.map((option, index) => (
-              <div
-                key={index}
-                className={`${styles.option_item} ${
-                  selectedOption === index ? styles.selectedOption : ''
-                }`}
-                onClick={() => handleOptionClick(index)}
-              >
-                {option.text || `Option ${index + 1}`}
-              </div>
-            ))
+            options.map((option, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`${styles.option_item} ${
+                    selectedOption === index ? styles.selectedOption : ''
+                  }`}
+                  onClick={() => handleOptionClick(index)}
+                >
+                  {option.image_url && (
+                    <img
+                      src={option.image_url}
+                      alt={`Option ${index + 1}`}
+                      className={styles.optionImage}
+                    />
+                  )}
+                  {option.text && (
+                    <div className={styles.optionText}>
+                      {option.text}
+                    </div>
+                  )}
+                </div>
+              );
+            })
           ) : (
             <div className={styles.option_item}>No options available</div>
           )}
@@ -191,7 +204,8 @@ Card.propTypes = {
         timer: PropTypes.string.isRequired, // Or change to number if timer is a number
         options: PropTypes.arrayOf(
           PropTypes.shape({
-            text: PropTypes.string.isRequired,
+            text: PropTypes.string,
+            image_url: PropTypes.string,
           })
         ),
         correct_option: PropTypes.number.isRequired,
