@@ -240,7 +240,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
 
       try {
         const response = await fetch(`${BACKEND_URL}/api/v1/quiz/${quizId}`, {
-          method: 'PUT',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`
@@ -251,6 +251,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         if (response.ok) {
           toast.success('Quiz updated successfully!');
           setModalContent('QuizUpdated');
+          toggleModal();
         } else {
           toast.error(`Error: ${result.error}`);
         }

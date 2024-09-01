@@ -17,6 +17,7 @@ exports.createQuiz = async (req, res) => {
 
 // Update an existing quiz
 exports.updateQuiz = async (req, res) => {
+  console.log(req.body);
   const { id } = req.params;
   const updates = req.body;
 
