@@ -22,6 +22,8 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
   const [quizType, setQuizType] = useState('Poll');
   const [quizName, setQuizName] = useState('');
 
+//   console.log(questionsData);
+
   useEffect(() => {
     const fetchQuizDetails = async () => {
       try {
@@ -91,13 +93,13 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
     const updatedQuestions = [...questionsData];
     if (updatedQuestions[selectedQuestionIndex].options.length < 4) { // Change max options to 4
       const newOption = {};
-      if (updatedQuestions[selectedQuestionIndex].optionType === 'text') {
+      if (updatedQuestions[selectedQuestionIndex].option_type === 'text') {
         newOption.text = '';
         newOption.image_url = '';
-      } else if (updatedQuestions[selectedQuestionIndex].optionType === 'image') {
+      } else if (updatedQuestions[selectedQuestionIndex].option_type === 'image') {
         newOption.text = '';
         newOption.image_url = '';
-      } else if (updatedQuestions[selectedQuestionIndex].optionType === 'textImage') {
+      } else if (updatedQuestions[selectedQuestionIndex].option_type === 'textImage') {
         newOption.text = '';
         newOption.image_url = '';
         newOption.additional_url = '';
@@ -117,7 +119,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
 
   const handleOptionTypeChange = (type) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[selectedQuestionIndex].optionType = type;
+    updatedQuestions[selectedQuestionIndex].option_type = type;
     updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.map(option => {
       const newOption = {};
       if (type === 'text') {
@@ -138,7 +140,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
 
   const handleRadioChange = (optionIndex) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[selectedQuestionIndex].selectedOption = optionIndex;
+    updatedQuestions[selectedQuestionIndex].correct_option = optionIndex;
     setQuestionsData(updatedQuestions);
   };
 
@@ -146,7 +148,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
     if (questionsData.length < 5) { // Max 5 questions
       setQuestionsData([
         ...questionsData,
-        { question_text: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
+        { question_text: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], option_type: 'text', correct_option: null, timer: time }
       ]);
       setSelectedQuestionIndex(questionsData.length);
     }
@@ -203,11 +205,11 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
       const allOptionsFilled = q.options.every(option => {
         const isTextValid = option.text.trim();
         const isImageValid = option.image_url ? isValidUrl(option.image_url) : true;
-        const isAdditionalUrlValid = q.optionType === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true;
+        const isAdditionalUrlValid = q.option_type === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true;
 
-        return (q.optionType === 'text' && isTextValid) ||
-               (q.optionType === 'image' && isImageValid) ||
-               (q.optionType === 'textImage' && isTextValid && isImageValid && isAdditionalUrlValid);
+        return (q.option_type === 'text' && isTextValid) ||
+               (q.option_type === 'image' && isImageValid) ||
+               (q.option_type === 'textImage' && isTextValid && isImageValid && isAdditionalUrlValid);
       });
 
       if (!allOptionsFilled) {
@@ -232,7 +234,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         return false;
       }
 
-      if (q.optionType === 'text' && q.options.some(opt => !opt.text.trim())) {
+      if (q.option_type === 'text' && q.options.some(opt => !opt.text.trim())) {
         toast.error('Please provide text for all options.');
         setErrorState({
           questionError: false,
@@ -243,7 +245,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         return false;
       }
 
-      if (q.optionType === 'image' && q.options.some(opt => !isValidUrl(opt.image_url))) {
+      if (q.option_type === 'image' && q.options.some(opt => !isValidUrl(opt.image_url))) {
         toast.error('Please provide valid image URLs.');
         setErrorState({
           questionError: false,
@@ -254,7 +256,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         return false;
       }
 
-      if (q.optionType === 'textImage' && q.options.some(opt => !opt.text.trim() || !isValidUrl(opt.image_url))) {
+      if (q.option_type === 'textImage' && q.options.some(opt => !opt.text.trim() || !isValidUrl(opt.image_url))) {
         toast.error('Please provide valid text and image URLs.');
         setErrorState({
           questionError: false,
@@ -339,12 +341,12 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
       <div className={styles.optionTypeContainer}>
         <Text weight='500'>Option Type :</Text>
         {['text', 'image', 'textImage'].map(type => (
-          <label className={questionsData[selectedQuestionIndex]?.optionType === type ? styles.selected : ''} key={type}>
+          <label className={questionsData[selectedQuestionIndex]?.option_type === type ? styles.selected : ''} key={type}>
             <input
               type="radio"
               name={`optionType-${selectedQuestionIndex}`}
               value={type}
-              checked={questionsData[selectedQuestionIndex]?.optionType === type}
+              checked={questionsData[selectedQuestionIndex]?.option_type === type}
               onChange={() => handleOptionTypeChange(type)}
             /> {type.charAt(0).toUpperCase() + type.slice(1).replace(/([A-Z])/g, ' $1')}
           </label>
@@ -354,8 +356,8 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
       <div className={styles.midsection}>
         <OptionsContainer
           options={questionsData[selectedQuestionIndex]?.options || []}
-          optionType={questionsData[selectedQuestionIndex]?.optionType || 'text'}
-          selectedOptionIndex={questionsData[selectedQuestionIndex]?.selectedOption}
+          optionType={questionsData[selectedQuestionIndex]?.option_type || 'text'}
+          selectedOptionIndex={questionsData[selectedQuestionIndex]?.correct_option}
           onOptionChange={handleOptionChange}
           onRadioChange={handleRadioChange}
           onRemoveOption={handleRemoveOption}

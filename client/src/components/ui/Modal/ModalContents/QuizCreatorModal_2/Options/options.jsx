@@ -78,9 +78,12 @@ const OptionsContainer = ({
         </div>
       ))}
       {options.length < 4 && (
-        <button className={styles.addOptionButton} onClick={onAddOption}>
+        <div className={styles.wrapper}> 
+          <button className={styles.addOptionButton} onClick={onAddOption}>
           Add option
-        </button>
+          </button>
+        </div>
+        
       )}
     </div>
   );

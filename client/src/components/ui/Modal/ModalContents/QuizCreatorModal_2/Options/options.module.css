@@ -2,6 +2,7 @@
     margin-bottom: 20px;
     width: 100%;
     height: 250px;
+    
   }
   
   .optionRow {
@@ -10,7 +11,7 @@
     margin-bottom: 10px;
     border-radius: 5px;
     gap: 10px;
-    /* background-color: yellow; */
+    
   }
   
   .optionRadio {
@@ -26,6 +27,7 @@
     box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
   }
   
+  
   .optionInput:focus {
     outline: none; 
     box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
@@ -37,7 +39,9 @@
     cursor: pointer;
     margin-left: 10px;
   }
-  
+  .wrapper{
+    display: flex;
+  }
   .addOptionButton {
     background-color: #f1f1f1;
     color: #A0A0A0;

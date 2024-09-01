@@ -72,12 +72,6 @@ const QuestionSchema = new Schema({
   correct_option: {
     type: Number,
     min: 0,
-    // validate: {
-    //   validator: function(v) {
-    //     return this.quiz_type === 'Q&A' ? v !== null && v < this.options.length : true;
-    //   },
-    //   message: props => `Correct option index must be between 0 and ${this.options.length - 1}.`,
-    // },
   },
   attempts: {
     type: Number,
