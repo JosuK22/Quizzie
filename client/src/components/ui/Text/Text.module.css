@@ -2,6 +2,7 @@
   max-width: 65ch;
 }
 
+/* Default text styles */
 .stepOne {
   font-size: 12px;
   letter-spacing: 0.0025em;
@@ -45,14 +46,71 @@
 }
 
 .stepEight {
-  font-size: 3rem;
-  letter-spacing: -0.01em;
-  line-height: 40px;
-}
-.stepNine {
-  font-size: 6rem;
+  font-size: 3rem; /* Equivalent to 48px */
   letter-spacing: -0.01em;
   line-height: 40px;
 }
 
+.stepNine {
+  font-size: 6rem; /* Equivalent to 96px */
+  letter-spacing: -0.01em;
+  line-height: 40px;
+}
+
+/* Media query for screens smaller than 800px */
+@media (max-width: 800px) {
+  .stepOne {
+    font-size: 6px; /* Halved from 12px */
+    letter-spacing: 0.00125em;
+    line-height: 8px;
+  }
+
+  .stepTwo {
+    font-size: 7px; /* Halved from 14px */
+    letter-spacing: 0em;
+    line-height: 10px;
+  }
+
+  .stepThree {
+    font-size: 8px; /* Halved from 16px */
+    letter-spacing: 0em;
+    line-height: 12px;
+  }
+
+  .stepFour {
+    font-size: 9px; /* Halved from 18px */
+    letter-spacing: -0.00125em;
+    line-height: 13px;
+  }
+
+  .stepFive {
+    font-size: 1.2rem; /* Halved from 20px */
+    letter-spacing: -0.0025em;
+    line-height: 13.62px;
+  }
+
+  .stepSix {
+    font-size: 1.4rem; /* Halved from 24px */
+    letter-spacing: -0.003125em;
+    line-height: 15px;
+  }
+
+  .stepSeven {
+    font-size: 14px; /* Halved from 28px */
+    letter-spacing: -0.00375em;
+    line-height: 18px;
+  }
+
+  .stepEight {
+    font-size: 1.8rem; /* Halved from 3rem */
+    letter-spacing: -0.005em;
+    line-height: 20px;
+  }
+
+  .stepNine {
+    font-size: 3rem; /* Halved from 6rem */
+    letter-spacing: -0.005em;
+    line-height: 20px;
+  }
+}
 

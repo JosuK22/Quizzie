@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Text, StatCard } from '../../../../components/ui';
 import { BACKEND_URL } from '../../../../utils/connection';
-import { ArrowLeft } from 'lucide-react';
 import styles from './questionAnalysis.module.css';
 
 const QuestionAnalysis = ({ quizId }) => {
@@ -38,12 +37,11 @@ const QuestionAnalysis = ({ quizId }) => {
   };
 
   // Extracting data
-  const { impressions, createdAt, questions } = data || {};
+  const { impressions, createdAt, questions, type } = data || {};
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-      
         <div className={styles.right}>
           <Text step={7} weight='800' color='#5076FF'>{data.name} : Question Wise Analysis</Text>
         </div>
@@ -56,23 +54,35 @@ const QuestionAnalysis = ({ quizId }) => {
 
       <div className={styles.body}>
         {questions && questions.length > 0 ? (
-          questions.map((question, index) => (
+          questions.map((question) => (
             <div key={question.question_number} className={styles.questionDetails}>
-              <Text step={7} ><strong>Q.{index + 1} : </strong>{question.question_text}</Text>
-              <div className={styles.wrapper}>
-                <StatCard 
-                  value={question.attempts} 
-                  label="People Attempted the question" 
-                />
-                <StatCard 
-                  value={question.correct_attempts} 
-                  label="People Answered Correctly" 
-                />
-                <StatCard 
-                  value={question.attempts - question.correct_attempts} 
-                  label="People Answered Incorrectly" 
-                />
-              </div>
+              <Text step={7} ><strong>Q.{question.question_number} : </strong>{question.question_text}</Text>
+              {type === 'Poll' ? (
+                <div className={styles.wrapper}>
+                  {question.options.map((option, index) => (
+                    <StatCard 
+                      key={index}
+                      value={option.attempt_count} 
+                      label={`Option ${index + 1}`} 
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.wrapper}>
+                  <StatCard 
+                    value={question.attempts} 
+                    label="People Attempted the question" 
+                  />
+                  <StatCard 
+                    value={question.correct_attempts} 
+                    label="People Answered Correctly" 
+                  />
+                  <StatCard 
+                    value={question.attempts - question.correct_attempts} 
+                    label="People Answered Incorrectly" 
+                  />
+                </div>
+              )}
             </div>
           ))
         ) : (

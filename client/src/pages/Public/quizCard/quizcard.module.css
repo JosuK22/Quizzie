@@ -1,7 +1,6 @@
 .container {
   height: 100%;
   width: 100%;
-  background-color: white;
   border-radius: 1rem;
   max-width: 1000px;
   padding: 2rem;  
@@ -34,6 +33,7 @@
   margin-top: 8rem;
   max-width: 800px;
   justify-content: center;
+  
 }
 
 .question {
@@ -45,6 +45,7 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 5rem;
   padding: 20px;
+  
 }
 
 .option_item {
@@ -60,9 +61,8 @@
   justify-content: center;
   gap: .5rem;
   padding: 5px;
-  /* Ensure padding is used to adjust size */
-  box-sizing: border-box; /* Include padding in total width/height */
-  height: auto; /* Ensure height adjusts based on content */
+  box-sizing: border-box; 
+  height: auto; 
   min-height: 125px;
 }
 
@@ -103,6 +103,9 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .container{
+    border-radius: 0%;
+  }
   .option_item {
     height: auto; /* Ensure height adjusts based on content */
   }

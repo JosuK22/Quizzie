@@ -1,12 +1,17 @@
 .statscard{
     width: 300px;
     min-height: 89px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     padding: 2rem;
     background-color: rgb(255, 255, 255);
     border-radius: .4rem;
     opacity: 0px;
     margin-top: 1rem;
+    max-width: 220px;
 }
 .span{
     text-align: center;
+    
 }

@@ -23,6 +23,15 @@ export default function Card({ quiz }) {
   const totalQuestions = quiz.questions.length;
 
   useEffect(() => {
+    // Check local storage for submission state
+    const storedSubmission = localStorage.getItem(`quiz_${quiz._id}_submitted`);
+    if (storedSubmission) {
+      setIsSubmitted(true);
+      const storedScore = localStorage.getItem(`quiz_${quiz._id}_score`);
+      setScore(parseInt(storedScore, 10) || 0);
+      return;
+    }
+
     if (isSubmitted) {
       return;
     }
@@ -38,6 +47,22 @@ export default function Card({ quiz }) {
 
     return () => clearInterval(intervalId);
   }, [countdown, isSubmitted]);
+
+  useEffect(() => {
+    // Handle page unload
+    const handleBeforeUnload = (e) => {
+      if (!isSubmitted) {
+        e.preventDefault();
+        handleQuizSubmission();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [currentIndex, score, isSubmitted]);
 
   const updateDatabase = async () => {
     if (selectedOption === null) {
@@ -83,7 +108,7 @@ export default function Card({ quiz }) {
       setSelectedOption(null);
       setHasAttempted(false); // Reset attempt status for the next question
     } else {
-      setIsSubmitted(true);
+      handleQuizSubmission();
     }
   };
 
@@ -111,6 +136,12 @@ export default function Card({ quiz }) {
     }
 
     moveToNextQuestion();
+  };
+
+  const handleQuizSubmission = () => {
+    localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
+    localStorage.setItem(`quiz_${quiz._id}_score`, score);
+    setIsSubmitted(true);
   };
 
   if (isSubmitted) {
@@ -145,7 +176,7 @@ export default function Card({ quiz }) {
 
       <div className={styles.body}>
         <div className={styles.question}>
-          <Text step={4} weight="700">
+          <Text step={6} weight="700">
             {question_text || 'No question text'}
           </Text>
         </div>

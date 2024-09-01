@@ -1,37 +1,70 @@
 import { useState, useEffect, useContext } from 'react';
 import Text from '../../../Text/Text';
-import Timer from './Timer/timer';
-import OptionsContainer from './Options/options';
+import Timer from '../QuizCreatorModal_2/Timer/timer';
+import OptionsContainer from '../QuizCreatorModal_2/Options/options';
 import toast, { Toaster } from 'react-hot-toast';
 import { BACKEND_URL } from '../../../../../utils/connection';
 import { AuthContext } from '../../../../../store/AuthProvider';
 import { useQuiz } from '../../../../../store/QuizProvider';
-import QuizPublished from '../QuizCreatorModal_3/QuizPublished'; 
-import styles from './questiondetails.module.css';
+import styles from '../QuizCreatorModal_2/questiondetails.module.css';
 
-const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) => {
+const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
   const [time, setTime] = useState(null);
   const { user } = useContext(AuthContext);
-  const { addQuiz } = useQuiz(); 
-  const [questionsData, setQuestionsData] = useState([
-    { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: null }
-  ]);
+  const { updateQuiz } = useQuiz();
+  const [questionsData, setQuestionsData] = useState([]);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [errorState, setErrorState] = useState({
     questionError: false,
     optionsError: false,
     optionSelectedError: false
   });
+  const [quizType, setQuizType] = useState('Poll');
+  const [quizName, setQuizName] = useState('');
 
   useEffect(() => {
-    const updatedQuestions = [...questionsData];
-    updatedQuestions[selectedQuestionIndex].timer = time;
-    setQuestionsData(updatedQuestions);
+    const fetchQuizDetails = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/v1/quiz/${quizId}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+          },
+        });
+        const result = await response.json();
+        if (response.ok) {
+          setQuizName(result.name || '');
+          setQuizType(result.type || 'Poll');
+          setQuestionsData(result.questions.map((q, index) => ({
+            ...q,
+            timer: q.timer !== null ? q.timer.toString() : null,
+            options: q.options.map(o => ({
+              ...o,
+              additional_url: o.additional_url || ''
+            })),
+          })));
+          setTime(result.questions[0]?.timer || null);
+        } else {
+          toast.error(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        toast.error('An error occurred while fetching quiz details.');
+        console.error('Error:', error);
+      }
+    };
+    fetchQuizDetails();
+  }, [quizId, user.token]);
+
+  useEffect(() => {
+    if (questionsData.length > 0) {
+      const updatedQuestions = [...questionsData];
+      updatedQuestions[selectedQuestionIndex].timer = time;
+      setQuestionsData(updatedQuestions);
+    }
   }, [time, selectedQuestionIndex]);
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questionsData];
-    updatedQuestions[index].question = value;
+    updatedQuestions[index].question_text = value;
     setQuestionsData(updatedQuestions);
     if (value.trim()) {
       setErrorState(prevState => ({ ...prevState, questionError: false }));
@@ -44,7 +77,6 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
       ...updatedQuestions[selectedQuestionIndex].options[optionIndex],
       ...updatedOption
     };
-  
     setQuestionsData(updatedQuestions);
     if (Object.values(updatedOption).some(value => value.trim())) {
       setErrorState(prevState => ({
@@ -54,11 +86,10 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
       }));
     }
   };
-  
 
   const handleAddOption = () => {
     const updatedQuestions = [...questionsData];
-    if (updatedQuestions[selectedQuestionIndex].options.length < 5) {
+    if (updatedQuestions[selectedQuestionIndex].options.length < 4) { // Change max options to 4
       const newOption = {};
       if (updatedQuestions[selectedQuestionIndex].optionType === 'text') {
         newOption.text = '';
@@ -78,8 +109,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
 
   const handleRemoveOption = (optionIndex) => {
     const updatedQuestions = [...questionsData];
-    // Ensure at least two options remain
-    if (updatedQuestions[selectedQuestionIndex].options.length > 2) {
+    if (updatedQuestions[selectedQuestionIndex].options.length > 2) { // Minimum 2 options
       updatedQuestions[selectedQuestionIndex].options = updatedQuestions[selectedQuestionIndex].options.filter((_, i) => i !== optionIndex);
       setQuestionsData(updatedQuestions);
     }
@@ -113,28 +143,23 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
   };
 
   const handleAddQuestion = () => {
-    if (questionsData.length < 5) {
+    if (questionsData.length < 5) { // Max 5 questions
       setQuestionsData([
         ...questionsData,
-        { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
+        { question_text: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
       ]);
       setSelectedQuestionIndex(questionsData.length);
     }
   };
 
   const handleCancel = () => {
-    setQuestionsData([
-      { question: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], optionType: 'text', selectedOption: null, timer: time }
-    ]);
-    setSelectedQuestionIndex(0);
-    toggleModal(); 
+    toggleModal();
   };
 
   const handleDeleteQuestion = () => {
-    if (questionsData.length > 1) {
+    if (questionsData.length > 1) { // Ensure at least one question remains
       const updatedQuestions = questionsData.filter((_, i) => i !== selectedQuestionIndex);
       setQuestionsData(updatedQuestions);
-
       const newIndex = Math.max(0, selectedQuestionIndex - 1);
       setSelectedQuestionIndex(newIndex);
     }
@@ -151,8 +176,19 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
 
   const validateQuiz = () => {
     let hasError = false;
-  
-    if (questionsData.some(q => !q.question.trim())) {
+
+    if (questionsData.length < 1 || questionsData.length > 5) {
+      toast.error('A quiz must have between 1 and 5 questions.');
+      setErrorState({
+        questionError: true,
+        optionsError: false,
+        optionSelectedError: false
+      });
+      hasError = true;
+      return false;
+    }
+
+    if (questionsData.some(q => !q.question_text.trim())) {
       toast.error('Please fill out all questions.');
       setErrorState({
         questionError: true,
@@ -162,18 +198,18 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
       hasError = true;
       return false;
     }
-  
+
     for (const q of questionsData) {
       const allOptionsFilled = q.options.every(option => {
         const isTextValid = option.text.trim();
-        const isImageValid = option.image_url ? isValidUrl(option.image_url) : true; // Validate URL
-        const isAdditionalUrlValid = q.optionType === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true; // Validate URL if applicable
-        
+        const isImageValid = option.image_url ? isValidUrl(option.image_url) : true;
+        const isAdditionalUrlValid = q.optionType === 'textImage' ? (option.additional_url ? isValidUrl(option.additional_url) : true) : true;
+
         return (q.optionType === 'text' && isTextValid) ||
                (q.optionType === 'image' && isImageValid) ||
                (q.optionType === 'textImage' && isTextValid && isImageValid && isAdditionalUrlValid);
       });
-  
+
       if (!allOptionsFilled) {
         toast.error('Please use valid URLs.');
         setErrorState({
@@ -184,96 +220,96 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
         hasError = true;
         return false;
       }
-  
-      // Check if correct_option is required based on quizType
-      if (quizType !== 'Poll') {
-        const isOptionSelected = q.selectedOption !== null &&
-                                 q.selectedOption >= 0 &&
-                                 q.selectedOption < q.options.length;
-        if (!isOptionSelected) {
-          toast.error('Select an answer for the question.');
-          setErrorState({
-            questionError: false,
-            optionsError: false,
-            optionSelectedError: true
-          });
-          hasError = true;
-          return false;
-        }
+
+      if (q.options.length < 2 || q.options.length > 4) {
+        toast.error('Each question must have between 2 and 4 options.');
+        setErrorState({
+          questionError: false,
+          optionsError: true,
+          optionSelectedError: false
+        });
+        hasError = true;
+        return false;
+      }
+
+      if (q.optionType === 'text' && q.options.some(opt => !opt.text.trim())) {
+        toast.error('Please provide text for all options.');
+        setErrorState({
+          questionError: false,
+          optionsError: true,
+          optionSelectedError: false
+        });
+        hasError = true;
+        return false;
+      }
+
+      if (q.optionType === 'image' && q.options.some(opt => !isValidUrl(opt.image_url))) {
+        toast.error('Please provide valid image URLs.');
+        setErrorState({
+          questionError: false,
+          optionsError: true,
+          optionSelectedError: false
+        });
+        hasError = true;
+        return false;
+      }
+
+      if (q.optionType === 'textImage' && q.options.some(opt => !opt.text.trim() || !isValidUrl(opt.image_url))) {
+        toast.error('Please provide valid text and image URLs.');
+        setErrorState({
+          questionError: false,
+          optionsError: true,
+          optionSelectedError: false
+        });
+        hasError = true;
+        return false;
       }
     }
-  
-    setErrorState({
-      questionError: false,
-      optionsError: false,
-      optionSelectedError: false
-    });
+
+    if (hasError) {
+      return false;
+    }
+
     return true;
   };
-  
 
-  
-  const handleTimeChange = (newTime) => {
-    setTime(newTime);
-  };
-
-  const handleCreateQuiz = async () => {
+  const handleUpdateQuiz = async () => {
     if (validateQuiz()) {
       const quizDetails = {
         name: quizName,
         type: quizType,
-        questions: questionsData.map((q, index) => ({
-          question_number: index + 1,
-          question_text: q.question,
-          option_type: q.optionType,
-          options: q.options.map(option => ({
-            text: option.text,
-            image_url: option.image_url,
-            additional_url: option.additional_url || ''
-          })),
-          // Conditionally include correct_option
-          ...(quizType !== 'Poll' ? { correct_option: q.selectedOption } : {}),
-          timer: quizType === 'Q&A' ? (q.timer === null ? null : Number(q.timer)) : null
-        }))
+        questions: questionsData.map(q => ({
+          ...q,
+          timer: q.timer !== null ? parseInt(q.timer, 10) : null
+        })),
       };
-  
+
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/quiz`, {
-          method: 'POST',
+        const response = await fetch(`${BACKEND_URL}/api/v1/quiz/update/${quizId}`, {
+          method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(quizDetails),
         });
-  
         const result = await response.json();
-  
         if (response.ok) {
-          toast.success('Quiz created successfully!');
-          console.log('Quiz Created:', result);
-          addQuiz(result);
-          setModalContent(
-            <QuizPublished
-              toggleModal={toggleModal}
-              quizId={result._id}
-            />
-          );
-  
+          toast.success('Quiz updated successfully!');
+          toggleModal();
         } else {
           toast.error(`Error: ${result.error}`);
         }
       } catch (error) {
-        toast.error('An error occurred while creating the quiz.');
+        toast.error('An error occurred while updating the quiz.');
         console.error('Error:', error);
       }
     }
   };
-  
 
   return (
     <div className={styles.quizContainer}>
-      <Toaster /> 
+      <Toaster />
       <div className={styles.questionHeader}>
         <div className={styles.questions}>
           {questionsData.map((_, index) => (
@@ -295,7 +331,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
       <input
         className={`${styles.questionInput} ${errorState.questionError ? styles.error : ''}`}
         type="text"
-        value={questionsData[selectedQuestionIndex]?.question || ''}
+        value={questionsData[selectedQuestionIndex]?.question_text || ''}
         placeholder="Poll Question"
         onChange={(e) => handleQuestionChange(selectedQuestionIndex, e.target.value)}
       />
@@ -327,9 +363,9 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
           errorState={errorState}
           quizType={quizType} 
         />
-        {quizType === 'Q&A' && (
+        {quizType === 'Timed' && (
           <div className={styles.timer}>
-            <Timer onTimeChange={handleTimeChange}/>
+            <Timer onTimeChange={setTime} />
           </div>
         )}
       </div>
@@ -339,10 +375,10 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
           <button className={styles.cancelButton} onClick={handleCancel}>Cancel</button>
           <button className={styles.cancelButton} onClick={handleDeleteQuestion}>Delete Question</button>
         </div>
-        <button className={styles.createButton} onClick={handleCreateQuiz}>Create Quiz</button>
+        <button className={styles.createButton} onClick={handleUpdateQuiz}>Update Quiz</button>
       </div>
     </div>
   );
 };
 
-export default QuestionDetails;
+export default UpdateDetails;

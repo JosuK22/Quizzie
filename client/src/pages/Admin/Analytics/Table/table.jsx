@@ -1,9 +1,11 @@
+// table.jsx
 import { useState } from 'react';
 import styles from './table.module.css';
 import { Text } from '../../../../components/ui';
 import copyLink from '../../../../utils/copyLink';
 import { Share2, FilePenLine, Trash2 } from 'lucide-react';
 import { Modal, DeleteConfirmation, QuizQuestionDetails } from '../../../../components/ui';
+import UpdateDetails from '../../../../components/ui/Modal/ModalContents/UpdateModal/updatemodal';
 import useModal from '../../../../hooks/useModal';
 import { useQuiz } from '../../../../store/QuizProvider'; // Import useQuiz
 import axios from 'axios';
@@ -110,12 +112,10 @@ const QuizTable = ({ onViewAnalysis }) => {
               onCancel={toggleModal}
             />
           ) : (
-            <QuizQuestionDetails 
+            <UpdateDetails
               toggleModal={toggleModal}
-              quizType={quizDetails?.type || ''}
-              quizName={quizDetails?.name || ''}
-              setModalContent={setModalContent}
-              quizData={quizDetails} // Pass quiz data to QuestionDetails
+              quizId={selectedQuizId} // Pass the selected quiz ID to UpdateDetails
+              setModalContent={setModalContent} // Pass setModalContent if needed in UpdateDetails
             />
           )}
         </Modal>
