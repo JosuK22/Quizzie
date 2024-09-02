@@ -8,7 +8,11 @@ import styles from './index.module.css';
 export default function Board() {
   const { trendingQuizzes, loading, error } = useQuiz();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <div className={styles.container}>
+      <div className={styles.loader}></div>
+    </div>
+    );
   if (error) return <p>Error: {error}</p>;
 
   return (

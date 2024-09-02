@@ -10,7 +10,6 @@ const Timer = ({ onTimeChange, initialTime }) => {
   }, [initialTime]);
 
   useEffect(() => {
-    // Convert 'off' to null or undefined, otherwise parse to number
     const timeValue = selectedTime === 'off' ? null : Number(selectedTime);
     if (onTimeChange) {
       onTimeChange(timeValue);
@@ -43,5 +42,3 @@ const Timer = ({ onTimeChange, initialTime }) => {
 };
 
 export default Timer;
-
-

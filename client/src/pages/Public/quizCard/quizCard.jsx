@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { Text } from '../../../components/ui';
 import VictoryCard from '../victoryCard/victorycard';
 import styles from './quizcard.module.css';
-import { BACKEND_URL } from '../../../utils/connection'; // Ensure this import
+import { BACKEND_URL } from '../../../utils/connection'; 
 
 export default function Card({ quiz }) {
   if (!quiz || !quiz.questions || quiz.questions.length === 0) {
     return <div>No quiz data available</div>;
   }
 
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [countdown, setCountdown] = useState(
     quiz.questions.length > 0 ? String(quiz.questions[0].timer) : '0'
@@ -17,13 +18,12 @@ export default function Card({ quiz }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // Track loading state
-  const [hasAttempted, setHasAttempted] = useState(false); // Track if attempt was made for the current question
+  const [loading, setLoading] = useState(false); 
+  const [hasAttempted, setHasAttempted] = useState(false); 
 
   const totalQuestions = quiz.questions.length;
 
   useEffect(() => {
-    // Check local storage for submission state
     const storedSubmission = localStorage.getItem(`quiz_${quiz._id}_submitted`);
     if (storedSubmission) {
       setIsSubmitted(true);
@@ -49,7 +49,6 @@ export default function Card({ quiz }) {
   }, [countdown, isSubmitted]);
 
   useEffect(() => {
-    // Handle page unload
     const handleBeforeUnload = (e) => {
       if (!isSubmitted) {
         e.preventDefault();
@@ -66,7 +65,7 @@ export default function Card({ quiz }) {
 
   const updateDatabase = async () => {
     if (selectedOption === null) {
-      return; // Skip API call if no option is selected
+      return; 
     }
 
     try {
@@ -91,30 +90,39 @@ export default function Card({ quiz }) {
   const handleQuestionTimeout = async () => {
     if (!hasAttempted) {
       const correctOption = quiz.questions[currentIndex].correct_option;
+      let newScore = score;
       if (selectedOption === correctOption) {
-        setScore((prevScore) => prevScore + 1);
+        newScore += 1;
+        setScore(newScore);
       }
       await updateDatabase();
-      setHasAttempted(true); // Mark as attempted
+      setHasAttempted(true); 
+
+      // Update localStorage immediately if this was the last question
+      if (currentIndex === totalQuestions - 1) {
+        localStorage.setItem(`quiz_${quiz._id}_score`, newScore);
+        localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
+        setIsSubmitted(true);
+        return;
+      }
     }
 
     moveToNextQuestion();
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = async () => {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setCountdown(String(quiz.questions[currentIndex + 1].timer));
       setSelectedOption(null);
-      setHasAttempted(false); // Reset attempt status for the next question
+      setHasAttempted(false); 
     } else {
-      handleQuizSubmission();
+      await handleQuizSubmission(); 
     }
   };
 
   const handleOptionClick = (index) => {
     if (selectedOption !== null && hasAttempted) {
-      // Option already selected and attempted
       return;
     }
 
@@ -128,24 +136,44 @@ export default function Card({ quiz }) {
 
     if (selectedOption !== null && !hasAttempted) {
       const correctOption = quiz.questions[currentIndex].correct_option;
+      let newScore = score;
       if (selectedOption === correctOption) {
-        setScore((prevScore) => prevScore + 1);
+        newScore += 1;
+        setScore(newScore);
       }
       await updateDatabase();
-      setHasAttempted(true); // Mark as attempted
+      setHasAttempted(true); 
+
+      if (currentIndex === totalQuestions - 1) {
+        localStorage.setItem(`quiz_${quiz._id}_score`, newScore);
+        localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
+        setIsSubmitted(true);
+        return;
+      }
     }
 
-    moveToNextQuestion();
+    await moveToNextQuestion(); 
   };
 
-  const handleQuizSubmission = () => {
+  const handleQuizSubmission = async () => {
+    let finalScore = score;
+
+    if (selectedOption !== null && !hasAttempted) {
+      const correctOption = quiz.questions[currentIndex].correct_option;
+      if (selectedOption === correctOption) {
+        finalScore += 1;
+      }
+      await updateDatabase();
+    }
+
+    setScore(finalScore);
     localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
-    localStorage.setItem(`quiz_${quiz._id}_score`, score);
+    localStorage.setItem(`quiz_${quiz._id}_score`, finalScore);
     setIsSubmitted(true);
   };
 
   if (isSubmitted) {
-    return <VictoryCard score={score} totalQuestions={totalQuestions} />;
+    return <VictoryCard score={score} totalQuestions={totalQuestions} quizType={quiz.type} />;
   }
 
   const currentQuestion = quiz.questions[currentIndex];
@@ -180,7 +208,7 @@ export default function Card({ quiz }) {
             {question_text || 'No question text'}
           </Text>
         </div>
-        <div className={styles.option_grid}>
+        <div className={styles.option_content}>
           {options && options.length > 0 ? (
             options.map((option, index) => {
               return (
@@ -215,7 +243,7 @@ export default function Card({ quiz }) {
           <button
             className={styles.continueButton}
             onClick={handleButtonClick}
-            disabled={loading} // Disable button while loading
+            disabled={loading} 
           >
             {currentIndex >= totalQuestions - 1 ? 'Submit' : 'NEXT'}
           </button>
@@ -227,12 +255,12 @@ export default function Card({ quiz }) {
 
 Card.propTypes = {
   quiz: PropTypes.shape({
-    _id: PropTypes.string.isRequired, // Ensure quiz ID is passed
+    _id: PropTypes.string.isRequired, 
     questions: PropTypes.arrayOf(
       PropTypes.shape({
         question_text: PropTypes.string.isRequired,
         question_number: PropTypes.number.isRequired,
-        timer: PropTypes.string.isRequired, // Or change to number if timer is a number
+        timer: PropTypes.string.isRequired, 
         options: PropTypes.arrayOf(
           PropTypes.shape({
             text: PropTypes.string,

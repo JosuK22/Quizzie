@@ -21,6 +21,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
   });
   const [quizType, setQuizType] = useState('Poll');
   const [quizName, setQuizName] = useState('');
+  const [hasNewQuestions, setHasNewQuestions] = useState(false); // New state for tracking new questions
 
   useEffect(() => {
     const fetchQuizDetails = async () => {
@@ -43,6 +44,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
             })),
           })));
           setTime(result.questions[0]?.timer || null);
+          setHasNewQuestions(false); // Reset the new questions flag
         } else {
           toast.error(`Error: ${result.error}`);
         }
@@ -56,11 +58,13 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
 
   useEffect(() => {
     if (questionsData.length > 0) {
-      const updatedQuestions = [...questionsData];
-      updatedQuestions[selectedQuestionIndex].timer = time;
+      const updatedQuestions = questionsData.map(q => ({
+        ...q,
+        timer: time
+      }));
       setQuestionsData(updatedQuestions);
     }
-  }, [time, selectedQuestionIndex]);
+  }, [time]);
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questionsData];
@@ -149,6 +153,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         { question_text: '', options: [{ text: '', image_url: '' }, { text: '', image_url: '' }], option_type: 'text', correct_option: null, timer: time }
       ]);
       setSelectedQuestionIndex(questionsData.length);
+      setHasNewQuestions(true); // Set flag to true when new question is added
     }
   };
 
@@ -276,9 +281,9 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
               {index + 1}
             </div>
           ))}
-          {questionsData.length < 5 && (
+          {/* {questionsData.length < 5 && (
             <button className={styles.addQuestionButton} onClick={handleAddQuestion}>+</button>
-          )}
+          )} */}
         </div>
         <Text step={2} color='gray'>Max 5 questions</Text>
       </div>
@@ -322,7 +327,7 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
         />
         {quizType === 'Q&A' && (
           <div className={styles.timer}>
-            <Timer onTimeChange={setTime} initialTime={questionsData[selectedQuestionIndex]?.timer} />
+            <Timer onTimeChange={setTime} initialTime={time} />
           </div>
         )}
       </div>
@@ -330,7 +335,9 @@ const UpdateDetails = ({ toggleModal, quizId, setModalContent }) => {
       <div className={styles.actionButtons}>
         <div className={styles.caution}>
           <button className={styles.cancelButton} onClick={handleCancel}>Cancel</button>
-          <button className={styles.cancelButton} onClick={handleDeleteQuestion}>Delete Question</button>
+          {hasNewQuestions && (
+            <button className={styles.cancelButton} onClick={handleDeleteQuestion}>Delete Question</button>
+          )}
         </div>
         <button className={styles.createButton} onClick={handleUpdateQuiz}>Update Quiz</button>
       </div>
