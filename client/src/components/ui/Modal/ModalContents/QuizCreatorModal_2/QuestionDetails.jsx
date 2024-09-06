@@ -296,7 +296,7 @@ const QuestionDetails = ({ toggleModal, quizType, quizName, setModalContent }) =
         className={`${styles.questionInput} ${errorState.questionError ? styles.error : ''}`}
         type="text"
         value={questionsData[selectedQuestionIndex]?.question || ''}
-        placeholder="Poll Question"
+        placeholder="Enter your question"
         onChange={(e) => handleQuestionChange(selectedQuestionIndex, e.target.value)}
       />
 
