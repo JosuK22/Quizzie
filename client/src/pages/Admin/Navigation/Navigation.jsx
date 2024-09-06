@@ -38,7 +38,7 @@ export default function Navigation() {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.logolinkContainer}>
+        
           <div className={styles.logo}>
             <Link to="/">
               <Text step={7} weight="800">
@@ -47,6 +47,7 @@ export default function Navigation() {
             </Link>
           </div>
 
+          <div className={styles.linkContainer}>
           <nav className={styles.links}>
             <NavLink
               to="/"

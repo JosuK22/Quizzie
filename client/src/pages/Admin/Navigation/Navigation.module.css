@@ -4,16 +4,18 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  justify-content: space-between;
   border: none;
-}
+  }
 
 .logo {
-  width: 100%;
+  width:80%;
   height: 100px;
   display: flex;
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  
 }
 
 .link{
@@ -22,31 +24,34 @@
   
 }
 
-.logolinkContainer{
+.linkContainer{
   display: flex;
   flex-direction: column;
+  width: 85%;
 }
 
 .links{
   display: flex;
   flex-direction: column;
-  margin-top: 15rem;
   text-align: left;
 }
 .links > * {
   opacity: 0.6;
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid transparent;
   
 }
 .links .active{
-  box-shadow: 0px 0px 50px 0px #3e3e413d;
-  border-radius: .4rem;
+  box-shadow: 0px 0px 20px 0px #3e3e413d;
+  border: 2px solid white;
+  border-radius: .6rem;
 }
 .links > *:hover,
 .active {
   background-color: #00000010;
   opacity: 1;
-  
+}
+.links > *:hover{
+  border-radius: .4rem;
 }
 
 .links > *,
@@ -60,12 +65,11 @@
 
 .logout {
   color: rgb(0, 0, 0);
-  margin-top: auto;
   cursor: pointer;
   margin-bottom: 2.5rem;
   width: 80%;
   border-top: 2px solid black;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid transparent;
 }
 
 .logout:hover{

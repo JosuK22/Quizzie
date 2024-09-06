@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Text } from '../../../components/ui';
 import VictoryCard from '../victoryCard/victorycard';
 import styles from './quizcard.module.css';
+import { useQuiz } from '../../../store/QuizProvider';
 import { BACKEND_URL } from '../../../utils/connection'; 
 
 export default function Card({ quiz }) {
