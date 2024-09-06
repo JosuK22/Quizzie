@@ -4,21 +4,20 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { EyeOff, LockKeyhole, Mail, User, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from '../../../utils/connection';
 import FormInput from '../../../components/form/InputBar/FormInput';
-import {Button, Text} from '../../../components/ui';
+import { Button, Text } from '../../../components/ui';
 import Form from '../Form/Form';
 
 import styles from './styles.module.css';
-
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const message = '* This field is required';
 
 const schema = yup
   .object({
-    
     name: yup.string().required(message),
     email: yup.string().required(message).matches(emailRegex, { message: 'Email is not valid' }),
     password: yup.string().required(message),
@@ -35,8 +34,7 @@ const defaultValues = {
 
 export default function Register() {
   const [isSafeToReset, setIsSafeToReset] = useState(false);
-
-  
+  const navigate = useNavigate();
 
   const {
     register,
@@ -50,7 +48,6 @@ export default function Register() {
   });
 
   const onSubmit = async (data) => {
-   
     try {
       const res = await fetch(
         BACKEND_URL + '/api/v1/auth/register',
@@ -76,19 +73,24 @@ export default function Register() {
       }
 
       toast.success('Successfully registered!');
+      localStorage.setItem('registrationEmail', data.email); // Store email
       setIsSafeToReset(true);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
     }
   };
-  
 
   useEffect(() => {
     if (!isSafeToReset) return;
 
-    reset(defaultValues); 
-  }, [reset, isSafeToReset]);
+    const timer = setTimeout(() => {
+      reset(defaultValues); 
+      navigate('/auth'); // Navigate to login page after delay
+    }, 500); // 2-second delay
+
+    return () => clearTimeout(timer); // Cleanup timeout if the component unmounts
+  }, [reset, isSafeToReset, navigate]);
 
   return (
     <Form title="Register">
@@ -97,13 +99,13 @@ export default function Register() {
           error={errors.name}
           label="name"
           register={register}
-          name = {'Name'}
+          name={'Name'}
           mainIcon={<User />}
         />
         <FormInput
           error={errors.email}
           label="email"
-          name = {'Email'}
+          name={'Email'}
           register={register}
           mainIcon={<Mail />}
         />
@@ -112,23 +114,25 @@ export default function Register() {
           label={'password'}
           register={register}
           type="password"
-          name = {'Password'}
+          name={'Password'}
           mainIcon={<LockKeyhole />}
-          secondaryIcon={<Eye/>}
-          tertiaryIcon ={<EyeOff/>}
+          secondaryIcon={<Eye />}
+          tertiaryIcon={<EyeOff />}
         />
         <FormInput
           error={errors.confirmPassword}
           label={'confirmPassword'}
           register={register}
           type="password"
-          name = {'Confirm Password'}
+          name={'Confirm Password'}
           mainIcon={<LockKeyhole />}
-          secondaryIcon={<Eye/>}
-          tertiaryIcon ={<EyeOff/>}
+          secondaryIcon={<Eye />}
+          tertiaryIcon={<EyeOff />}
         />
 
-        <Button color='primary' variant={'form'}><Text color='white' weight='700'>{isSubmitting ? 'Registering...' : 'Register'}</Text></Button>
+        <Button color='primary' variant={'form'}>
+          <Text color='white' weight='700'>{isSubmitting ? 'Registering...' : 'Register'}</Text>
+        </Button>
       </form>
     </Form>
   );

@@ -13,8 +13,9 @@
   width: 100%;
   max-width: 1200px;
   height: 200px;
-  gap : 4rem;
-  justify-content: center;
+  
+  justify-content: space-between;
+  
 }
 
 .quizContainer{

@@ -1,7 +1,10 @@
 import React from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; // Import default styles
+
 import styles from './quizcard.module.css';
 import { Eye } from 'lucide-react';
-import { Text } from '../../../../../components/ui';
+import { Text } from '../../../../../components/ui'; // Assuming Text is just a styled span or similar
 
 const formatImpressions = (impressions) => {
   if (impressions >= 1000) {
@@ -19,7 +22,9 @@ export default function QuizCard({ name, impressions, createdAt }) {
   return (
     <div className={styles.quizcard}>
       <div className={styles.title}>
-        <Text step={5} weight='600'>{name}</Text>
+        <Tippy content={name} placement='top' theme='name'>
+          <span className={styles.name}>{name}</span>
+        </Tippy>
       </div>
       <div className={styles.views}>
         <Text step={4} weight='600'>{formatImpressions(impressions)}</Text>

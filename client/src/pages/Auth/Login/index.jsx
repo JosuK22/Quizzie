@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { Eye, Lock, Mail, EyeOff } from 'lucide-react';
 
-import { AuthContext } from '../../../store/AuthProvider.jsx';
-import FormInput from '../../../components/form/InputBar/FormInput.jsx';
-import {Button, Spinner, Text} from '../../../components/ui';
-import Form from '../Form/Form.jsx';
-import { BACKEND_URL } from '../../../utils/connection.js';
+import { AuthContext } from '../../../store/AuthProvider';
+import FormInput from '../../../components/form/InputBar/FormInput';
+import { Button, Spinner, Text } from '../../../components/ui';
+import Form from '../Form/Form';
+import { BACKEND_URL } from '../../../utils/connection';
 
 import styles from './styles.module.css';
 
@@ -32,9 +32,10 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm({
     defaultValues: {
-      email: '',
+      email: localStorage.getItem('registrationEmail') || '',
       password: '',
     },
     resolver: yupResolver(userSchema),
@@ -43,7 +44,6 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const res = await fetch(
-        
         BACKEND_URL + '/api/v1/auth/login',
         {
           method: 'POST',
@@ -68,10 +68,13 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    localStorage.removeItem('registrationEmail'); // Clear email from local storage
+  }, []);
+
   return (
     <Form title="Login">
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        
         <FormInput
           error={errors.email}
           label="email"
@@ -84,13 +87,15 @@ export default function Login() {
           label="password"
           register={register}
           type="password"
-          name = {'Password'}
+          name={'Password'}
           mainIcon={<Lock />}
-          secondaryIcon={<Eye/>}
-          tertiaryIcon ={<EyeOff/>}
+          secondaryIcon={<Eye />}
+          tertiaryIcon={<EyeOff />}
         />
 
-        <Button color='primary' variant={'form'}><Text color='white' step={3} weight='700'>{isSubmitting ? <Spinner/> : 'SignIn'}<Text/></Text></Button>
+        <Button color='primary' variant={'form'}>
+          <Text color='white' step={3} weight='700'>{isSubmitting ? <Spinner /> : 'SignIn'}</Text>
+        </Button>
       </form>
     </Form>
   );
