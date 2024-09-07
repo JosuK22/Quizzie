@@ -21,9 +21,7 @@ function StartCard({ quizType, onStart }) {
         </button>
       </div>
       <div className={styles.footer}>
-        
-          {quizType === 'Q&A' ? (<Text>Click start to begin the quiz</Text>) : (<Text step={6}>Click <strong onClick={onStart} className={styles.strong}>START</strong> to share your opinions!</Text>)}
-        
+          {quizType === 'Q&A' ? (<Text step={6}>Click <strong onClick={onStart} className={styles.strong}>START</strong> to begin the quiz</Text>) : (<Text step={6}>Click <strong onClick={onStart} className={styles.strong}>START</strong> to share your opinions!</Text>)}
       </div>
     </div>
   );

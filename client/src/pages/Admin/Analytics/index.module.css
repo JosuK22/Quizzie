@@ -21,7 +21,5 @@
   border: .1px solid transparent;
 }
 .button:hover{
-  /* border: .1px solid rgb(255, 255, 255); */
-  /* background-color: white; */
   box-shadow: 5px 5px 20px white;
 }

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { BACKEND_URL } from '../../utils/connection';
 import StartCard from './startCard/startcard';
@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 
 export default function PublicLayout() {
   const { quizId } = useParams(); 
-  const navigate = useNavigate(); 
   const url = `${BACKEND_URL}/api/v1/quiz/${quizId}`;
   const { data, isLoading, error, refetch } = useFetch(url); 
   const [pageState, setPageState] = useState('start'); // 'start', 'quiz', 'victory'
