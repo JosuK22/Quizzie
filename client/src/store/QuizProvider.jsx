@@ -98,6 +98,7 @@ export const QuizProvider = ({ children }) => {
     });
   };
   
+  
 
   return (
     <QuizContext.Provider value={{ quizzes, trendingQuizzes, loading, error, quizCount, questionCount, totalImpressions, deleteQuiz, addQuiz }}>

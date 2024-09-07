@@ -3,15 +3,10 @@ import { useState, useEffect } from 'react';
 import { Text } from '../../../components/ui';
 import VictoryCard from '../victoryCard/victorycard';
 import styles from './quizcard.module.css';
-import { useQuiz } from '../../../store/QuizProvider';
 import { BACKEND_URL } from '../../../utils/connection'; 
 
-export default function Card({ quiz }) {
-  if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-    return <div>No quiz data available</div>;
-  }
-
-  
+export default function QuizCard({ quiz, onFinish }) {
+  // State initialization
   const [currentIndex, setCurrentIndex] = useState(0);
   const [countdown, setCountdown] = useState(
     quiz.questions.length > 0 ? String(quiz.questions[0].timer) : '0'
@@ -25,18 +20,6 @@ export default function Card({ quiz }) {
   const totalQuestions = quiz.questions.length;
 
   useEffect(() => {
-    const storedSubmission = localStorage.getItem(`quiz_${quiz._id}_submitted`);
-    if (storedSubmission) {
-      setIsSubmitted(true);
-      const storedScore = localStorage.getItem(`quiz_${quiz._id}_score`);
-      setScore(parseInt(storedScore, 10) || 0);
-      return;
-    }
-
-    if (isSubmitted) {
-      return;
-    }
-
     if (countdown <= 0) {
       handleQuestionTimeout();
       return;
@@ -99,11 +82,11 @@ export default function Card({ quiz }) {
       await updateDatabase();
       setHasAttempted(true); 
 
-      // Update localStorage immediately if this was the last question
       if (currentIndex === totalQuestions - 1) {
         localStorage.setItem(`quiz_${quiz._id}_score`, newScore);
         localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
         setIsSubmitted(true);
+        onFinish(newScore); // Notify parent of completion
         return;
       }
     }
@@ -149,6 +132,7 @@ export default function Card({ quiz }) {
         localStorage.setItem(`quiz_${quiz._id}_score`, newScore);
         localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
         setIsSubmitted(true);
+        onFinish(newScore); // Notify parent of completion
         return;
       }
     }
@@ -171,11 +155,8 @@ export default function Card({ quiz }) {
     localStorage.setItem(`quiz_${quiz._id}_submitted`, 'true');
     localStorage.setItem(`quiz_${quiz._id}_score`, finalScore);
     setIsSubmitted(true);
+    onFinish(finalScore); // Notify parent of completion
   };
-
-  if (isSubmitted) {
-    return <VictoryCard score={score} totalQuestions={totalQuestions} quizType={quiz.type} />;
-  }
 
   const currentQuestion = quiz.questions[currentIndex];
   const { question_text, question_number, options } = currentQuestion || {};
@@ -254,14 +235,14 @@ export default function Card({ quiz }) {
   );
 }
 
-Card.propTypes = {
+QuizCard.propTypes = {
   quiz: PropTypes.shape({
     _id: PropTypes.string.isRequired, 
     questions: PropTypes.arrayOf(
       PropTypes.shape({
         question_text: PropTypes.string.isRequired,
         question_number: PropTypes.number.isRequired,
-        timer: PropTypes.string.isRequired, 
+        // timer: PropTypes.string.isRequired, 
         options: PropTypes.arrayOf(
           PropTypes.shape({
             text: PropTypes.string,
@@ -272,4 +253,5 @@ Card.propTypes = {
       })
     ).isRequired,
   }).isRequired,
+  onFinish: PropTypes.func.isRequired,
 };

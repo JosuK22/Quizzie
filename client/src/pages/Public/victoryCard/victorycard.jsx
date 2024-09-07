@@ -1,12 +1,26 @@
 // victorycard.jsx
-// victorycard.jsx
 import PropTypes from 'prop-types';
 import Trophy from '../../../assets/trophy.png';
 import { Text } from '../../../components/ui';
+import { useEffect } from 'react';
 import styles from './victory.module.css';
 
-function VictoryCard({ score, totalQuestions, quizType }) {
+function VictoryCard({ score, totalQuestions, quizType, onRestart }) {
   const formattedScore = `${String(score).padStart(2, '0')}/${String(totalQuestions).padStart(2, '0')}`;
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      onRestart(); // Redirect back to start
+      e.returnValue = ''; // For older browsers
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [onRestart]);
 
   return (
     <div className={styles.container}>
@@ -33,6 +47,7 @@ VictoryCard.propTypes = {
   score: PropTypes.number.isRequired,
   totalQuestions: PropTypes.number.isRequired,
   quizType: PropTypes.oneOf(['Q&A', 'Poll']).isRequired,
+  onRestart: PropTypes.func.isRequired,
 };
 
 export default VictoryCard;
