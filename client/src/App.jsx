@@ -51,7 +51,7 @@ const router = createBrowserRouter([
   {
     path: '/quiz/:quizId',
     element: (<AuthProvider>
-      <QuizProvider> {/* Wrap PublicLayout with QuizProvider to ensure data is shared */}
+      <QuizProvider> 
         <PublicLayout />
       </QuizProvider>
     </AuthProvider>),

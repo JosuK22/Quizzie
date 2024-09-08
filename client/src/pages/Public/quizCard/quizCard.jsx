@@ -171,6 +171,7 @@ export default function QuizCard({ quiz, onFinish }) {
 
   return (
     <div className={styles.container}>
+
       <div className={styles.header}>
         <div className={styles.questionNumber}>
           <Text step={5} weight="700">
@@ -231,6 +232,7 @@ export default function QuizCard({ quiz, onFinish }) {
           </button>
         </div>
       </div>
+      
     </div>
   );
 }

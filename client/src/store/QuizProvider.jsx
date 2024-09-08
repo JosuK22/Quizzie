@@ -48,6 +48,12 @@ export const QuizProvider = ({ children }) => {
     };
 
     fetchQuizzes();
+    const interval = setInterval(fetchQuizzes, 5000); // Poll every 10 seconds
+
+    return () => {
+      clearInterval(interval);
+    };
+
   }, [authLoading, user?.token]);
 
   const deleteQuiz = async (id) => {

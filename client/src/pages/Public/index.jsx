@@ -12,6 +12,7 @@ export default function PublicLayout() {
   const url = `${BACKEND_URL}/api/v1/quiz/${quizId}`;
   const { data, isLoading, error, refetch } = useFetch(url); 
   const [pageState, setPageState] = useState('start'); // 'start', 'quiz', 'victory'
+  
 
   useEffect(() => {
     const updateImpressions = async () => {
@@ -24,6 +25,7 @@ export default function PublicLayout() {
         });
         
         refetch();
+        
       } catch (err) {
         console.error('Failed to update impressions:', err);
       }
