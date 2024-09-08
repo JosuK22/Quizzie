@@ -1,5 +1,6 @@
 import { useParams} from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
+import { Text } from '../../components/ui';
 import { BACKEND_URL } from '../../utils/connection';
 import StartCard from './startCard/startcard';
 import QuizCard from './quizCard/quizCard';
@@ -66,7 +67,12 @@ export default function PublicLayout() {
   let content;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
+    content = (
+      <div className={styles.loaderContainer}>
+        <div className={styles.loader}></div>
+        <Text step={4} color='white'>Loading</Text>
+      </div>
+  );
   }
 
   if (error) {

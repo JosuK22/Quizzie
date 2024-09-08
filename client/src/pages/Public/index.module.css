@@ -16,6 +16,34 @@
   justify-content: center;
   background-color: white;
 }
+.loaderContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+
+.loader {
+  --b: 25px; 
+  width: calc(12*var(--b));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    repeating-radial-gradient(calc(2*var(--b)) at top,#ffffff00 -1px,#ffffff 0 calc(50% - 1px),#ffffff00 50% calc(100% - 1px)) calc(50% + var(--b)) 100%, 
+    repeating-radial-gradient(calc(2*var(--b)) at bottom,#ffffff -1px,#ffffff00 0 calc(50% - 1px),#ffffff 50% calc(100% - 1px)) 50% 0;
+  background-size: 150% 50%;
+  background-repeat: no-repeat;
+  mask: 
+    radial-gradient(calc(1.5*var(--b)) at calc(100% - var(--b)/2) 0, #ffffff00 calc(100%/3), #ffffff calc(100%/3 + 1px) 110%, #ffffff00 0) calc(50% + var(--b)/2) 
+     100%/calc(3*var(--b)) 50% exclude no-repeat, 
+    conic-gradient(#ffffff 0 0);
+  animation: l20 1s infinite linear;
+}
+@keyframes l20 {
+  100% {transform: rotate(1turn)}
+}
 
 @media (max-width: 768px) { 
   .container{
