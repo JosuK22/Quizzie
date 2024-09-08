@@ -15,24 +15,26 @@ export default function PublicLayout() {
   
 
   useEffect(() => {
-    const updateImpressions = async () => {
-      try {
-        await fetch(`${BACKEND_URL}/api/v1/quiz/${quizId}/increment-impressions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        
-        refetch();
-        
-      } catch (err) {
-        console.error('Failed to update impressions:', err);
-      }
-    };
+    if (pageState !== 'victory') {
+      const updateImpressions = async () => {
+        try {
+          await fetch(`${BACKEND_URL}/api/v1/quiz/${quizId}/increment-impressions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          refetch();
+          
+        } catch (err) {
+          console.error('Failed to update impressions:', err);
+        }
+      };
 
-    updateImpressions();
-  }, [quizId, refetch]);
+      updateImpressions();
+    }
+  }, [quizId, refetch, pageState]); // Dependency on pageState
 
   useEffect(() => {
     const storedScore = localStorage.getItem(`quiz_${quizId}_score`);
