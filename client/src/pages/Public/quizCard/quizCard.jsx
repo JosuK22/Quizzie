@@ -186,11 +186,13 @@ export default function QuizCard({ quiz, onFinish }) {
       </div>
 
       <div className={styles.body}>
+        
         <div className={styles.question}>
           <Text step={6} weight="700">
             {question_text || 'No question text'}
           </Text>
         </div>
+
         <div className={styles.option_content}>
           {options && options.length > 0 ? (
             options.map((option, index) => {
@@ -222,7 +224,9 @@ export default function QuizCard({ quiz, onFinish }) {
           )}
         </div>
 
-        <div className={styles.buttons}>
+
+      </div>
+      <div className={styles.buttons}>
           <button
             className={styles.continueButton}
             onClick={handleButtonClick}
@@ -231,7 +235,6 @@ export default function QuizCard({ quiz, onFinish }) {
             {currentIndex >= totalQuestions - 1 ? 'Submit' : 'NEXT'}
           </button>
         </div>
-      </div>
       
     </div>
   );

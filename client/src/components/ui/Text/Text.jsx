@@ -52,9 +52,9 @@ export default function Text({
   };
 
   return (
-    <p style={fontStyles} className={`${stepStyle} ${styles.text} ${className}`}>
+    <div style={fontStyles} className={`${stepStyle} ${styles.text} ${className}`}>
       {children}
-    </p>
+    </div>
   );
 }
 

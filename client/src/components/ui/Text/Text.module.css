@@ -62,55 +62,65 @@
   .stepOne {
     font-size: 6px; /* Halved from 12px */
     letter-spacing: 0.00125em;
-    line-height: 8px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepTwo {
     font-size: 7px; /* Halved from 14px */
     letter-spacing: 0em;
-    line-height: 10px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepThree {
     font-size: 8px; /* Halved from 16px */
     letter-spacing: 0em;
-    line-height: 12px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepFour {
     font-size: 9px; /* Halved from 18px */
     letter-spacing: -0.00125em;
-    line-height: 13px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepFive {
     font-size: 1.2rem; /* Halved from 20px */
     letter-spacing: -0.0025em;
-    line-height: 13.62px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepSix {
     font-size: 1.4rem; /* Halved from 24px */
     letter-spacing: -0.003125em;
-    line-height: 15px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepSeven {
     font-size: 14px; /* Halved from 28px */
     letter-spacing: -0.00375em;
-    line-height: 18px;
+    line-height: 1.5rem;
+    text-align: center;
+
   }
 
   .stepEight {
-    font-size: 1.8rem; /* Halved from 3rem */
+    font-size: 1.3rem; /* Halved from 3rem */
     letter-spacing: -0.005em;
-    line-height: 20px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 
   .stepNine {
-    font-size: 3rem; /* Halved from 6rem */
+    font-size: 1.5rem; /* Halved from 6rem */
     letter-spacing: -0.005em;
-    line-height: 20px;
+    line-height: 1.5rem;
+    text-align: center;
   }
 }
 
