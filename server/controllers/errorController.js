@@ -7,7 +7,7 @@ const handleDuplicateError = (err, req, res) => {
     status: err.status,
     error: err,
     errors: errorObj,
-    message: 'Duplicate field value in database.',
+    message: 'The Email id is already registered',
   });
 };
 

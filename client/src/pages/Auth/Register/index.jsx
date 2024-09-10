@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from '../../../utils/connection';
 import FormInput from '../../../components/form/InputBar/FormInput';
-import { Button, Text } from '../../../components/ui';
+import { Button, Text, Spinner } from '../../../components/ui';
 import Form from '../Form/Form';
 
 import styles from './styles.module.css';
@@ -131,7 +131,7 @@ export default function Register() {
         />
 
         <Button color='primary' variant={'form'}>
-          <Text color='white' weight='700'>{isSubmitting ? 'Registering...' : 'Register'}</Text>
+          <Text color='white' weight='700'>{isSubmitting ? <Spinner/> : 'Sign Up'}</Text>
         </Button>
       </form>
     </Form>

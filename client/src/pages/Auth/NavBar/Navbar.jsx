@@ -12,7 +12,7 @@ function Navbar() {
           variant={'form'}
           color={isActive ? 'neutral' : 'success'}
           >
-            <Text step={3} weight="700">Login</Text>
+            <Text step={3} weight="700">Sign In</Text>
           </Button>
         )}
       </NavLink>
@@ -22,7 +22,7 @@ function Navbar() {
           variant={'form'}
           color={isActive ? 'neutral' : 'success'}
           >
-            <Text step={3} weight="700">Register</Text>
+            <Text step={3} weight="700">Sign Up</Text>
           </Button>
         )}
       </NavLink>

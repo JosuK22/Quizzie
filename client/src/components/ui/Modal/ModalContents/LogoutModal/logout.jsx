@@ -9,7 +9,7 @@ function LogoutModal({ toggleModal }) { // Receive toggleModal as a prop
 
   return (
     <div className={styles.logoutContent}>
-      <Text step={4} weight="500" style={{ textAlign: 'center' }}>
+      <Text step={4} weight="600" style={{ textAlign: 'center' }}>
         Are you sure you want to logout?
       </Text>
 

@@ -94,7 +94,7 @@ export default function Login() {
         />
 
         <Button color='primary' variant={'form'}>
-          <Text color='white' step={3} weight='700'>{isSubmitting ? <Spinner /> : 'SignIn'}</Text>
+          <Text color='white' step={3} weight='700'>{isSubmitting ? <Spinner /> : 'Sign In'}</Text>
         </Button>
       </form>
     </Form>

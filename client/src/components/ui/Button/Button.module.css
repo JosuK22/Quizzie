@@ -9,10 +9,10 @@
   transition-duration: 0.3s;
   border: 1px solid transparent;
   letter-spacing: 2px;
-  min-width: 160px;
+  min-width: 150px;
   white-space: normal;
   text-align: center;
-  padding: 14px 12px 16px;
+  padding: 14px 10px 14px;
   box-shadow: var(--box-shadow);
 }
 
@@ -29,24 +29,31 @@
 } */
 
 .error {
-  background-color: var(--error);
+  
   border: 2px solid var(--error);
+  background-color: transparent;
+  color: #000;
+}
+.error:hover{
+  background-color: var(--error);
   color: white;
 }
-
 .neutral{
   border: 1px solid rgba(124, 162, 243, 0.5);
 }
-
+.primary:hover{
+  background-color: #3f9c42;
+}
 .outline.primary {
   background-color: transparent;
   border: none;
   box-shadow: none;
-  color: var(--primary);
+  color:  white;
 }
+
 .outline.primary:hover{
   color: white;
-  background-color: #4CAF50;
+  background-color: #49964c;
 }
 
 .ghost.primary{
