@@ -10,7 +10,7 @@
 
 .header{
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
 }
 .button{
   background-color: inherit;
@@ -19,6 +19,7 @@
   padding: 1rem 4rem;
   cursor: pointer;
   border: .1px solid transparent;
+  margin-left: 1rem;
 }
 .button:hover{
   box-shadow: 5px 5px 20px white;
