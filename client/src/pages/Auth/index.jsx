@@ -33,7 +33,7 @@ export default function AuthLayout() {
     return (
       <>
         <Toaster
-          position="top-center"
+          position="top-right"
           reverseOrder={false}
           toastOptions={{
             style: {
@@ -60,7 +60,7 @@ export default function AuthLayout() {
   return (
     <>
       <Toaster
-        position="top-center"
+        position="top-right"
         reverseOrder={false}
         toastOptions={{
           style: {
