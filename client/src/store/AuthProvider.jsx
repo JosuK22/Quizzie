@@ -40,25 +40,31 @@ export default function AuthProvider({ children }) {
           Authorization: 'Bearer ' + user.token,
         },
       });
-  
+
+      if (res.status === 401) { // Unauthorized status
+        throw new Error('Token expired');
+      }
+
       if (!res.ok) {
         const errJson = await res.json();
         throw new Error(errJson.message);
       }
-  
+
       const resObj = await res.json();
       const updatedUser = { ...user, info: resObj.data.info };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
-  
+
       if (shouldLogout) {
         logout();
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
+      if (error.message === 'Token expired') {
+        logout();
+      }
     }
   };
-  
 
   return (
     <AuthContext.Provider
@@ -70,5 +76,5 @@ export default function AuthProvider({ children }) {
 }
 
 AuthProvider.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.node.isRequired,
 };

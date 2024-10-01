@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Text } from '../../components/ui';
 import { useContext, useEffect, useState } from 'react'; 
 import { AuthContext } from '../../store/AuthProvider';
+import Img from '../../assets/sad.png'
 
 import styles from './index.module.css';
 
@@ -45,10 +46,13 @@ export default function AuthLayout() {
 
         <main className={styles.container}>
           <div className={styles.poster}>
-            <Text color="white" step={8}>
-              Sorry amigo 
+            <Text color="white" step={6} weight='800'>
+              Sorry Amigo 
             </Text>
-            <Text color="white" step={4} style={{ marginTop: '0.5rem' }}>
+            <img src={Img} className={styles.sad_img}>
+            
+            </img>
+            <Text color="white" step={8} style={{ marginTop: '0.5rem' }}>
               This website is for desktop only
             </Text>
           </div>

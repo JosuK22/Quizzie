@@ -4,7 +4,7 @@
 }
 
 .poster {
-  background-color: var(--primary);
+  background-color: #4CAF50;
   flex: 3;
   height: 100vh;
   display: flex;
@@ -14,7 +14,9 @@
   gap: 3rem;
 }
 
-
+.sad_img{
+  height: 30vh;
+}
 
 .outlet {
   height: 100vh;

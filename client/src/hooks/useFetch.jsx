@@ -18,7 +18,7 @@ export default function useFetch(url, options) {
       }
 
       const resObj = await res.json();
-      setData(resObj); // Adjust based on actual response structure
+      setData(resObj); 
     } catch (error) {
       setError(error);
       toast.error(error.message);
